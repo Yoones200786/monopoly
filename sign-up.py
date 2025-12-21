@@ -1,3 +1,6 @@
+import re
+import uuid
+import 
 def mainmenu():
     print ("\033[1;32mWelcome to Monopoly!\033[0m\n")
     print ("1. New Game")
@@ -21,11 +24,24 @@ def signupmenu():
     print ("1. Signup")
     print ("2. Login")
     print ("3. Exit")
+def emailisvalid(x):
+
+
+
+
+
+
+
+
+
+
+
 def loadgame():
     print ("The Functuion is not ready yet!")
 def leaderboard():
     print ("The Functuion is not ready yet!")
 mainmenu()
+
 
 
    
