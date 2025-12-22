@@ -1,0 +1,39 @@
+state = {
+    "current_turn": 1,
+        "1": {
+            "username": "player1",
+            "position": 1,
+            "money": 1500,
+            "properties": [],
+            "in_jail": False,
+            "jail_turns": 0,
+            "get_out_of_jail_cards": 0
+        },
+        "2": {
+            "username": "player2",
+            "position": 1,
+            "money": 1500,
+            "properties": [],
+            "in_jail": False,
+            "jail_turns": 0,
+            "get_out_of_jail_cards": 0
+        },
+        "3": {
+            "username": "player3",
+            "position": 1,
+            "money": 1500,
+            "properties": [],
+            "in_jail": False,
+            "jail_turns": 0,
+            "get_out_of_jail_cards": 0
+        },
+        "4": {
+            "username": "player4",
+            "position": 1,
+            "money": 1500,
+            "properties": [],
+            "in_jail": False,
+            "jail_turns": 0,
+            "get_out_of_jail_cards": 0
+        }
+}
