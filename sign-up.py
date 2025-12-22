@@ -25,10 +25,10 @@ def signupmenu():
     print ("1. Signup")
     print ("2. Login")
     print ("3. Exit")
-    choice = input ("Enter your choice (1-4):")
+    choice = input ("Enter your choice (1-3):")
     if choice == "1":
         username = input("Enter a username:")
-        while usenameisnew(username) == False:
+        while usernameisnew(username) == False:
             print ("username is already taken, please try again!")
             username = input("Enter a username:")
         email = input("Enter an email:")
@@ -56,6 +56,39 @@ def signupmenu():
         users.update(user_data)
         with open ("sign-up.json", "w") as f:
             json.dump(users, f, indent=4)
+        mainmenu()
+    elif choice == "2":
+        players = {}
+        player_num = 1
+
+        while player_num <= 4:
+            print(f"\nPlayer {player_num} login")
+            username = input("Enter your username: ")
+            password = input("Enter your password: ")
+
+            if check_login(username, password):
+                if username in players.values():
+                    print("This user already logged in as a player! Try another account.")
+                    continue
+                players[player_num] = username
+                print(f"Player {player_num} logged in successfully")
+                player_num += 1
+            else:
+                print("Invalid username or password")
+                print("1. Try again")
+                print("2. Exit to signup menu")
+                choice2 = input("Enter your choice (1-2): ")
+                if choice2 == "2":
+                    mainmenu()  
+        
+        with open("current-game.json", "w") as f:
+            json.dump(players, f, indent=4)
+        newgame()
+    elif choice == "3":
+        mainmenu()
+    else:
+        print ("Oops! Please enter a valid number (1-3).\n")
+        signupmenu()
 def emailisvalid(email):
     email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     if re.match(email_pattern, email):
@@ -67,7 +100,7 @@ def passisvalid(password):
         return True
     else:
         return False
-def usenameisnew(username):
+def usernameisnew(username):
     try:
         with open("sign-up.json", "r") as f:
             users = json.load(f)
@@ -86,7 +119,19 @@ def emailisnew(email):
     for u in users.values():
         if u.get("email") == email:
             return False
-    return True    
+    return True
+def check_login(username,password):
+    try:
+        with open("sign-up.json", "r") as f:
+            users = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return False
+    for u in users.values():
+        if u.get("username") == username:
+            return bcrypt.checkpw(password.encode("utf-8"), u["password"].encode("utf-8"))
+    return False
+def newgame():
+    print ("The Functuion is not ready yet!")
 def loadgame():
     print ("The Functuion is not ready yet!")
 def leaderboard():
