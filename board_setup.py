@@ -300,14 +300,14 @@ def initialize_board():
             if space["type"] == "property":
                 space["houses"] = 0 
 color_groups = {
-    "brown": [1, 3],
-    "light_blue": [6, 8, 9],
-    "pink": [11, 13, 14],
-    "orange": [16, 18, 19],
-    "red": [21, 23, 24],
-    "yellow": [26, 27, 29],
-    "green": [31, 32, 34],
-    "dark_blue": [37, 39],
+    "brown": [2, 4],
+    "light_blue": [7, 9, 10],
+    "pink": [12, 14, 15],
+    "orange": [17, 19, 20],
+    "red": [22, 24, 25],
+    "yellow": [27, 28, 30],
+    "green": [32, 33, 35],
+    "dark_blue": [38, 40],
 }
-railroad_positions = [5, 15, 25, 35]
-utility_positions = [12, 28]
+railroad_positions = [6, 16, 26, 36]
+utility_positions = [13, 29]
