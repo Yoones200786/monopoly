@@ -1,5 +1,5 @@
 import random
-
+import golami
 player_num = 1
 players_square = dict()
 for i in range(1, 5):
@@ -46,6 +46,4 @@ while True:
             player_num = player_num % (len(players_square) + 1)
             if player_num == 0:
                 player_num = list(players_square.keys())[0]
-
-
 
