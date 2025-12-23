@@ -1,5 +1,9 @@
 import random
 import json
+with open ("current-game.json","r") as f:
+    username_dict = json.load(f)
+
+
 def informations(id,username,position=0,in_jail=False,jail_turns=0,money=1500,properties=None):
     if properties is None:
         properties = []
@@ -23,18 +27,24 @@ def leaderboard(players):
         print(f"{informarion['id']:<4} {informarion['username']:<10} {informarion['position']:<10} {jail_situation:<16} {informarion['jail_turns']:<12} {informarion['money']:<8} {all_properties}")
 
 
-p1=informations(id=1, username="shahriyar", position=10, in_jail=False, jail_turns=2, money=2000, properties=["Park Place", "Boardwalk"])
-p2 = informations(2, "Dariush", position=5, in_jail=True, jail_turns=2, money=1200, properties=["Baltic Ave"])
-p3 = informations(3, "zahra", position=15, in_jail=False, jail_turns=0, money=1800)
-players=[p1,p2,p3]
+p1=informations(id=1, username=username_dict["1"], position=10, in_jail=False, jail_turns=2, money=2000, properties=["Park Place", "Boardwalk"])
+p2 = informations(2, username_dict["2"], position=5, in_jail=True, jail_turns=2, money=1200, properties=["Baltic Ave"])
+p3 = informations(3, username_dict["3"], position=15, in_jail=False, jail_turns=0, money=1800)
+p4 = informations(4, username_dict["4"], position=15, in_jail=False, jail_turns=0, money=1800)
+players=[p1,p2,p3,p4]
 
 leaderboard(players)
 
 def save_game():
-    save=leaderboard(players)
-    with open("leadrboard.json", "w",encoding="utf-8") as f:
-        
-        json.dump(save,f)
+    with open ("current-game.json","r") as f:
+        username_dict = json.load(f)
+    dict_save = []
+    for i in range(4):
+        save=informations(i+1,username_dict[str(i+1)],position=0,in_jail=False,jail_turns=0,money=1500,properties=None)
+        dict_save.append(save)
+    with open("leaderboard.json", "w") as f:
+            
+        json.dump(dict_save,f, indent = 4)
 
 chance_card=["get out of jail free","go directory to jail","pay 15$ to the bank","move to GO and get 150$","you win a home in pacific avenue street","get 150$ from the bank","pay 20$ to the bank","give the next player 80$","Give the next person $50","pay 15$ to the bank"]
 community_chest=["receive 200$ form bank","get 50$ from next previous","give the next player 100$","sell one of your houses","move to free parking","receive 50$ form bank","give the next player 150$"]
