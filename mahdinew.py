@@ -20,22 +20,25 @@ player_num = state['current_turn']
 
 
 def showing_option(player_num, square_num, players):
-    orders = []
+    orders = ['next']
     order_list = ['next -> move to next player']
     if gm.can_build_house(player_num, square_num, players):
-        order_list.append(f"""house -> you can build home here with price of {monopoly_data[square_num]['house_cost']}
-         in color {monopoly_data[square_num]['color']} in square_num {square_num}\n""")
+        order_list.append(f"house -> you can build home here with price of {monopoly_data[str(square_num)]['house_cost']}in color {monopoly_data[str(square_num)]['color']}")
         orders.append('house')
     if gm.is_land_buyable(player_num, square_num, players):
-        order_list.append(f"""land -> you can buy land here with price of {monopoly_data[square_num]['buy_price']}
-                 in color {monopoly_data[square_num]['color']} in square_num {square_num}\n""")
+        order_list.append(f"land -> you can buy land here with price of {monopoly_data[str(square_num)]['buy_price']}in color {monopoly_data[str(square_num)]['color']}")
         orders.append('land')
     if gm.can_build_hotel(player_num, square_num, players):
-        order_list.append(f"""hotel -> you can build home here with price of {monopoly_data[square_num]['hotel_cost']}
-                 in color {monopoly_data[square_num]['color']} in square_num {square_num}\n""")
+        order_list.append(f"hotel -> you can build home here with price of {monopoly_data[str(square_num)]['hotel_cost']} in color {monopoly_data[str(square_num)]['color']}")
         orders.append('hotel')
-    str_option = ''.join(order_list)
-    return str_option, orders
+    if gm.can_buy_railroad(player_num, square_num, players):
+        order_list.append(f"railroad -> you can buy railroad here with price of {monopoly_data[str(square_num)]['buy_price']}")
+        orders.append('railroad')
+    if gm.can_buy_utilities(player_num, square_num, players):
+        order_list.append(f"utility -> you can buy utility here with price of {monopoly_data[str(square_num)]['buy_price']}")
+        orders.append('utility')
+    str_orders = '\n'.join(order_list)
+    return str_orders, orders
 
 
 
@@ -61,7 +64,7 @@ def new_turn(player_num, square_num, picked_same=0):
         square_num = 1
     if tas1 == tas2:
         picked_same += 1
-        player_num, square_num = new_turn(player_num, square_num, picked_same)
+        player_num, square_num, dice_sum = new_turn(player_num, square_num, picked_same)
 
     else:
         picked_same = 1
@@ -84,23 +87,28 @@ def removeplayer(player_num):
 
 while True:
     print('---new turn starts---')
+    print(players)
     square_num = players_square[player_num]
     pre_square_num = square_num
     player_num, square_num, dice_sum = new_turn(player_num, square_num)
-    gm.calculate_rent(square_num, player_num, dice_sum)
+    print(player_num,square_num)
+    rent = gm.calculate_rent(square_num, player_num, dice_sum)
+    print(f'you had to pay {rent}$ of rent')
     if pre_square_num >= square_num:
         players[player_num]['money'] += 200
+    players[player_num]['money'] -= rent
+
+
 #    if house can be bought add option of buying in order list (and player have enough money to buy it)
 #    we should also add option of buying house or making hotel
 #    in this place we can realize that player run out of money and loses we call remove function
     #   all possible messages should be in this
-    orders_dict = {'buy': 'buy -> buy current road', 'next': 'next -> next to next person'}
     input_is_not_valid = True
     print(f'player {player_num} in square {square_num}')
     print('/_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ /')
     str_orders, orders = showing_option(player_num, square_num, players)
     while input_is_not_valid:
-        next_order = input(showing_option(player_num, square_num, players))
+        next_order = input(str_orders)
         if next_order in orders:
             input_is_not_valid = False
         else:
@@ -112,4 +120,7 @@ while True:
         player_num = next_person_move(player_num)
     if next_order == 'hotel':
         gm.build_hotel(player_num, square_num, players)
+        player_num = next_person_move(player_num)
+    if next_order == 'railroad' or next_order == 'utility' or next_order == 'land':
+        gm.buy_property(player_num, square_num, players)
         player_num = next_person_move(player_num)

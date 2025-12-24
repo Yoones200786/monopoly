@@ -39,3 +39,4 @@ state = {
         }
     }
 }
+players = state["players"]
