@@ -12,7 +12,8 @@ monopoly_data = {
         "buy_price": 60,
         "rent": [2, 10, 30, 90, 160, 250],
         "house_cost": 50,
-        "hotel_cost": 50
+        "hotel_cost": 50,
+        "owner":""
     },
     "3": {
         "name": "Community Chest 1",
@@ -25,7 +26,8 @@ monopoly_data = {
         "buy_price": 60,
         "rent": [4, 20, 60, 180, 320, 450],
         "house_cost": 50,
-        "hotel_cost": 50
+        "hotel_cost": 50,
+        "owner":""
     },
     "5": {
         "name": "Income Tax",
@@ -165,8 +167,7 @@ monopoly_data = {
         "name": "Indiana Avenue",
         "type": "property",
         "color": "red",
-        "buy_price": 220,
-        "rent": [18, 90, 250, 700, 875, 1050],
+        "buy_price": 220,"rent": [18, 90, 250, 700, 875, 1050],
         "house_cost": 150,
         "hotel_cost": 150
     },
@@ -288,3 +289,27 @@ monopoly_data = {
         "hotel_cost": 200
     }
 }
+board = [None] * 40
+for key in monopoly_data:
+    pos = int(key) - 1
+    board[pos] = monopoly_data[key].copy()
+def initialize_board():
+    for i in range(40):
+        space = board[i]
+        if space["type"] in ["property", "railroad", "utility"]:
+            space["owner"] = None
+            space["mortgaged"] = False
+            if space["type"] == "property":
+                space["houses"] = 0
+color_groups = {
+    "brown": [2, 4],
+    "light_blue": [7, 9, 10],
+    "pink": [12, 14, 15],
+    "orange": [17, 19, 20],
+    "red": [22, 24, 25],
+    "yellow": [27, 28, 30],
+    "green": [32, 33, 35],
+    "dark_blue": [38, 40],
+}
+railroad_positions = [6, 16, 26, 36]
+utility_positions = [13, 29]

@@ -1,9 +1,12 @@
 import random
-import golami
+import golami as gm
+from board_setup import monopoly_data
 player_num = 1
 players_square = dict()
 for i in range(1, 5):
     players_square[i] = 1
+
+
 
 
 def go_to_jail(player_num):
@@ -11,20 +14,25 @@ def go_to_jail(player_num):
     players_square[player_num] = 11
 
 def new_turn(player_num, square_num, picked_same=0):
+    print(picked_same)
     if picked_same == 3:
         picked_same = 1
         go_to_jail(player_num)
-        print(f'player{player_num} went to jail')
         return
-    tas1 = random.randrange(1, 7)
-    tas2 = random.randrange(1, 7)
+    #tas1 = random.randrange(1, 7)
+    #tas2 = random.randrange(1, 7)
+    tas1 = 2
+    tas2 = 2
     square_num += tas1 + tas2
     square_num = square_num % 41
     if square_num == 0:
         square_num = 1
     if tas1 == tas2:
         picked_same += 1
-        player_num, square_num = new_turn(player_num, square_num, picked_same)
+        new_move = new_turn(player_num, square_num, picked_same)
+        if new_move:
+            player_num, square_num = new_move
+        else:
 
     else:
         picked_same = 1
