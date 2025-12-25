@@ -1,4 +1,4 @@
-monopoly_data = {
+data = {
     "1": {
         "name": "GO",
         "type": "special",
