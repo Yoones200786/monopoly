@@ -1,13 +1,23 @@
 from board_setup import board, color_groups, railroad_positions, utility_positions
+
 def has_monopoly(player_id, color):
     for pos in color_groups[color]:
         if board[pos]["owner"] != player_id:
             return False, "player does not own all properties of this color"
     return True, "player owns all properties of this color"
+
 def count_railroads(player_id):
     return sum(1 for pos in railroad_positions if board[pos]["owner"] == player_id), "railroads counted"
+
 def count_utilities(player_id):
     return sum(1 for pos in utility_positions if board[pos]["owner"] == player_id), "utilities counted"
+def show_info_of_current_space(position):
+    space = board[position - 1]
+    msg = f"you are currently in {space['type']} square with name of {space['name']}"
+    if space['type'] == 'property':
+        msg += f" in color {space['color']}"
+    print(msg)
+
 def calculate_rent(position, current_player_id, dice_sum=0):
     space = board[position]
     if space["type"] not in ["property", "railroad", "utility", "tax"]:
@@ -150,6 +160,30 @@ def sell_hotel(player_id, position, players):
     space["houses"] = 4
     return True, f"hotel sold for {refund}$"
 
+def find_available_houses(player_id):
+    available_houses = []
+    pos_houses = []
+    for checker in range(40):
+        space = board[checker - 1]
+        if space["type"] == "property":
+            if space["owner"] == player_id:
+                if space.get("houses", 0) > 0:
+                    available_houses.append(f"square {(checker + 1)} with {space.get('houses', 0)} houses")
+                    pos_houses.append(checker+1)
+    return available_houses, pos_houses
+
+def find_available_hotel(player_id):
+    available_hotels = []
+    pos_hotels = []
+    for checker in range(40):
+        space = board[checker - 1]
+        if space["type"] == "property":
+            if space["owner"] == player_id:
+                if space.get("hotel", 0) == 1:
+                    available_hotels.append(f"square {(checker + 1)} with {space.get('hotel')} hotel")
+                    pos_hotels.append(checker + 1)
+    return available_hotels, pos_hotels
+
 def handle_bankruptcy(players, player_id, creditor_id=None):
     player = players[player_id]
     if player["money"] >= 0:
@@ -165,3 +199,4 @@ def handle_bankruptcy(players, player_id, creditor_id=None):
         players[creditor_id]["money"] += max(0, -player["money"])
     player["money"] = 0
     return True, f"player {player_id} declared bankrupt"
+
