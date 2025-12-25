@@ -5,8 +5,6 @@ from load_save import players
 
 def has_monopoly(player_id, color):
     for pos in color_groups[color]:
-        print(board[pos - 1])
-        print()
         if board[pos]["owner"] != player_id:
             return False  # "player has not all this color"
     return True  # "player has this color"
@@ -19,12 +17,15 @@ def count_railroads(player_id):
 def count_utilities(player_id):
     return sum(1 for pos in utility_positions if board[pos - 1]["owner"] == player_id)  #"player has y utility."
 
-
+def show_info_space(position):
+    space = board[position - 1]
+    print(f'you are currently in {space['type']} square with name of {space["name"]}')
 def calculate_rent(position, current_player_id, dice_sum=0):
     space = board[position - 1]
     if space["type"] not in ["property", "railroad", "utility", "tax"]:
         return 0  # "this house is not rent"
     if space["type"] == 'tax':
+        print('you landed on a tax square!')
         return space["amount"]
 
     if space.get("owner") == "" or space["owner"] == current_player_id or space.get("mortgaged", False):
@@ -166,4 +167,3 @@ def build_hotel(player_id, position, players):
             space['houses'] = 0
             space['hotel'] = 1
 
-print(board)

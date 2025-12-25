@@ -35,7 +35,7 @@ monopoly_data = {
     "5": {
         "name": "Income Tax",
         "type": "tax",
-        "amount": 2009
+        "amount": 200
         , "owner": "gov"
 
     },

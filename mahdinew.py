@@ -1,7 +1,13 @@
+
+import colorama
+colorama.init()
+
 import random
 import golami as gm
 from board_setup import monopoly_data
 from load_save import state
+
+
 """
 player_num = 1
 players_square = dict()
@@ -23,10 +29,10 @@ def showing_option(player_num, square_num, players):
     orders = ['next']
     order_list = ['next -> move to next player']
     if gm.can_build_house(player_num, square_num, players):
-        order_list.append(f"house -> you can build home here with price of {monopoly_data[str(square_num)]['house_cost']}in color {monopoly_data[str(square_num)]['color']}")
+        order_list.append(f"house -> you can build home here with price of {monopoly_data[str(square_num)]['house_cost']} in color {monopoly_data[str(square_num)]['color']}")
         orders.append('house')
     if gm.is_land_buyable(player_num, square_num, players):
-        order_list.append(f"land -> you can buy land here with price of {monopoly_data[str(square_num)]['buy_price']}in color {monopoly_data[str(square_num)]['color']}")
+        order_list.append(f"land -> you can buy land here with price of {monopoly_data[str(square_num)]['buy_price']} in color {monopoly_data[str(square_num)]['color']}")
         orders.append('land')
     if gm.can_build_hotel(player_num, square_num, players):
         order_list.append(f"hotel -> you can build home here with price of {monopoly_data[str(square_num)]['hotel_cost']} in color {monopoly_data[str(square_num)]['color']}")
@@ -82,30 +88,29 @@ def next_person_move(player_num):
 
 def removeplayer(player_num):
     players_square.pop(player_num)  # if player does not  have money it gets eliminated
-
+    players.pop(player_num)
 
 
 while True:
-    print('---new turn starts---')
     print(players)
+    print(colorama.Fore.GREEN + colorama.Style.BRIGHT + "---new turn starts!---" + colorama.Style.RESET_ALL)
     square_num = players_square[player_num]
     pre_square_num = square_num
     player_num, square_num, dice_sum = new_turn(player_num, square_num)
-    print(player_num,square_num)
     rent = gm.calculate_rent(square_num, player_num, dice_sum)
+    print(f'player {player_num} in square {square_num}')
     print(f'you had to pay {rent}$ of rent')
     if pre_square_num >= square_num:
         players[player_num]['money'] += 200
     players[player_num]['money'] -= rent
-
+    gm.show_info_space(square_num)
 
 #    if house can be bought add option of buying in order list (and player have enough money to buy it)
 #    we should also add option of buying house or making hotel
 #    in this place we can realize that player run out of money and loses we call remove function
     #   all possible messages should be in this
     input_is_not_valid = True
-    print(f'player {player_num} in square {square_num}')
-    print('/_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ /')
+    print('/_ _ _ _ _ choose from following options _ _ _ _ _ /')
     str_orders, orders = showing_option(player_num, square_num, players)
     while input_is_not_valid:
         next_order = input(str_orders)
