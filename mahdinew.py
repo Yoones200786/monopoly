@@ -77,7 +77,7 @@ def new_turn(player_num, square_num, picked_same=0):
         players_square[player_num] = square_num
     return player_num, square_num, (tas1 + tas2)
 
-def next_person_move(player_num):
+def next_person_move(player_num):  #  finds out who's turn is next
     player_num += 1
     while player_num not in players_square:
         player_num += 1
@@ -86,29 +86,34 @@ def next_person_move(player_num):
             player_num = list(players_square.keys())[0]  # goes back to first of loop then goes into new turn
     return player_num
 
-def removeplayer(player_num):
+
+def remove_player(player_num):
     players_square.pop(player_num)  # if player does not  have money it gets eliminated
     players.pop(player_num)
 
 
+
 while True:
-    print(players)
     print(colorama.Fore.GREEN + colorama.Style.BRIGHT + "---new turn starts!---" + colorama.Style.RESET_ALL)
     square_num = players_square[player_num]
     pre_square_num = square_num
     player_num, square_num, dice_sum = new_turn(player_num, square_num)
     rent = gm.calculate_rent(square_num, player_num, dice_sum)
     print(f'player {player_num} in square {square_num}')
-    print(f'you had to pay {rent}$ of rent')
+    print(f'you have to pay {rent}$ of rent')
     if pre_square_num >= square_num:
         players[player_num]['money'] += 200
-    players[player_num]['money'] -= rent
-    gm.show_info_space(square_num)
+        print('you got 200$ cause you passed GO!')
+    if players[player_num]['money'] < rent:
+        gm.handle_bankruptcy()
 
-#    if house can be bought add option of buying in order list (and player have enough money to buy it)
-#    we should also add option of buying house or making hotel
-#    in this place we can realize that player run out of money and loses we call remove function
-    #   all possible messages should be in this
+    else:
+        if rent > 0:
+            players[player_num]['money'] -= rent
+            gm.giving_money_to_player(player_num, square_num, players, rent)
+    print('your current state is:    propertiesInfo:(color, houses, hotel)/utility/rail')
+    print(players[player_num])
+    gm.show_info_of_current_space(square_num)
     input_is_not_valid = True
     print('/_ _ _ _ _ choose from following options _ _ _ _ _ /')
     str_orders, orders = showing_option(player_num, square_num, players)

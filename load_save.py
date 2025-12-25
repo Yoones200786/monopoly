@@ -3,7 +3,7 @@ state = {
     "players": {
         1: {
             "username": "player1",
-            "position": 0,
+            "position": 1,
             "money": 1500,
             "properties": [],
             "in_jail": False,
@@ -12,7 +12,7 @@ state = {
         },
         2: {
             "username": "player2",
-            "position": 0,
+            "position": 1,
             "money": 1500,
             "properties": [],
             "in_jail": False,
@@ -21,7 +21,7 @@ state = {
         },
         3: {
             "username": "player3",
-            "position": 0,
+            "position": 1,
             "money": 1500,
             "properties": [],
             "in_jail": False,
@@ -30,7 +30,7 @@ state = {
         },
         4: {
             "username": "player4",
-            "position": 0,
+            "position": 1,
             "money": 1500,
             "properties": [],
             "in_jail": False,
