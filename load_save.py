@@ -4,7 +4,7 @@ state = {
         1: {
             "username": "player1",
             "position": 1,
-            "money": 1500,
+            "money": 1000000,
             "properties": [],
             "in_jail": False,
             "jail_turns": 0,
