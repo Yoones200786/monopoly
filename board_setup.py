@@ -31,6 +31,7 @@ monopoly_data = {
         "house_cost": 50,
         "hotel_cost": 50,
         "owner":""
+
     },
     "5": {
         "name": "Income Tax",
@@ -56,8 +57,7 @@ monopoly_data = {
         "house_cost": 50,
         "hotel_cost": 50
         , "owner": ""
-
-    },
+},
     "8": {
         "name": "Chance 1",
         "type": "chance"
@@ -73,8 +73,8 @@ monopoly_data = {
         "house_cost": 50,
         "hotel_cost": 50
         , "owner": ""
-
     },
+
     "10": {
         "name": "Connecticut Avenue",
         "type": "property",
@@ -83,9 +83,7 @@ monopoly_data = {
         "rent": [8, 40, 100, 300, 450, 600],
         "house_cost": 50,
         "hotel_cost": 50
-        , "owner": ""
-
-    },
+        , "owner": ""},
     "11": {
         "name": "Jail",
         "type": "special",

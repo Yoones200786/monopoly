@@ -1,6 +1,7 @@
 from board_setup import board, color_groups, railroad_positions, utility_positions
 from load_save import state
 
+
 def has_monopoly(player_id, color):
     for pos in color_groups[color]:
         if board[pos - 1]["owner"] != player_id:
@@ -10,6 +11,13 @@ def has_monopoly(player_id, color):
 
 def count_railroads(player_id):
     return sum(1 for pos in railroad_positions if board[pos - 1]["owner"] == player_id)
+
+
+def add_house_to_properties(player_id, position, players):
+    for i in players[player_id]["properties"]:
+        for j in i:
+            if j == f"square {position}":
+                i[j][1] += 1
 
 
 def count_utilities(player_id):
@@ -22,6 +30,26 @@ def show_info_of_current_space(position):
     if space['type'] == 'property':
         msg += f' in color {space['color']}'
     print(msg)
+
+
+def check_even_houses(color, position, code, player_id, players):
+    idx_color_space = []
+    space = board[position - 1]
+    color_of_space = space['color']
+    count_houses_in_every_color = []
+    for i in color_groups[color_of_space]:
+        idx_color_space.append(i)
+    for i in idx_color_space:
+        num_house = board[i - 1].get('houses', 0)
+        count_houses_in_every_color.append(num_house)
+    if find_available_hotel(player_id,players):
+        return False
+    if code == 'buy':
+        if space.get("houses", 0) == min(count_houses_in_every_color):
+            return True
+    if code == 'sell':
+        if space.get("houses", 0) == max(count_houses_in_every_color):
+            return True
 
 
 def calculate_rent(position, current_player_id, dice_sum=0):
@@ -86,31 +114,35 @@ def giving_money_to_player(player_id, position, players, rent):
 
 
 def mortgage_property(player_id, position, players):
-    space = board[position]
+    space = board[position -1]
     if space["type"] in ["property", "railroad", "utility"] and \
             space["owner"] == player_id and not space.get("mortgaged", False) and \
-            space.get("houses", 0) == 0:
+            space.get("houses", 0) == 0\
+            and space.get('hotel', 0) == 0:
         mortgage_value = space["buy_price"] // 2
         players[player_id]["money"] += mortgage_value
+        print('mortgaged successfully!')
         space["mortgaged"] = True
-        return True, mortgage_value, "money recive and property mortgage"
-    return False, 0, "sharait gero gozari bargharar nist"
+        return True, mortgage_value  # "money recive and property mortgage"
+    return False, 0  # "sharait gero gozari bargharar nist"
 
 
 def unmortgage_property(player_id, position, players):
-    space = board[position]
+
+    space = board[position -1]
     if space["type"] in ["property", "railroad", "utility"] and \
             space["owner"] == player_id and space.get("mortgaged", False):
+        print('hello')
         cost = int((space["buy_price"] // 2) * 1.1)
+        print(players[player_id]["money"] >= cost)
         if players[player_id]["money"] >= cost:
+            print('unmortgaged successfully!')
             players[player_id]["money"] -= cost
             space["mortgaged"] = False
-            return True, cost, "property azad shod ba cost$"
-    return False, 0, "has not money for azad sazi gero"
 
 
 def build_house(player_id, position, players):
-    space = board[position]
+    space = board[position - 1]
     if space["type"] != "property":
         return False, "thie khaneh is not melk"
     if space["owner"] != player_id:
@@ -124,15 +156,18 @@ def build_house(player_id, position, players):
         return False, "not enough money"
     players[player_id]["money"] -= cost
     space["houses"] = space.get("houses", 0) + 1
+    print('bought successfully!')
     add_house_to_properties(player_id, position, players)
     return True, f"one house made: {cost}"
 
 
-def add_house_to_properties(player_id, position, players):
+def add_hotel_to_properties(player_id, position, players):
     for i in players[player_id]["properties"]:
         for j in i:
             if j == f"square {position}":
-                i[j][1] += 1
+                i[j][2] += 1
+                i[j][1] = 0
+
 
 def can_build_hotel(player_id, position, players):
     space = board[position - 1]
@@ -143,6 +178,10 @@ def can_build_hotel(player_id, position, players):
     if space.get("mortgaged", False):
         return False
     if space.get("houses", 0) < 4:
+        return False
+    if not check_even_houses(space["color"], position, 'buy',player_id,players):
+        return False
+    if space.get("hotel", 0) == 1:
         return False
     return True
 
@@ -166,7 +205,11 @@ def can_build_house(player_id, position, players):
                 for i in color_groups[color_of_space]:
                     idx_color_space.append(i)
                 for i in idx_color_space:
+                    if space.get('mortgaged', False):
+                        return False
                     num_house = board[i - 1].get('houses', 0)
+                    if board[i - 1].get('hotel', 0) == 1:
+                        num_house = 4
                     count_houses_in_every_color.append(num_house)
                 if space.get("houses", 0) == min(count_houses_in_every_color) and space.get('houses',0) < 4 and space.get('hotel', 0) == 0:
                     return True
@@ -176,17 +219,19 @@ def can_build_house(player_id, position, players):
 def can_buy_railroad(player_id, position, players):
     space = board[position - 1]
     if space["type"] == "railroad":
-        if space["owner"] == "":
-            if players[player_id]['money'] >= space["buy_price"]:
-                return True
+        if players[player_id]['money'] >= space["buy_price"]:
+            if space["owner"] == "":
+                if players[player_id]['money'] >= space["buy_price"]:
+                    return True
     return False
 
 
 def can_buy_utilities(player_id, position, players):
     space = board[position - 1]
     if space["type"] == "utility":
-        if space["owner"] == "":
-            return True
+        if players[player_id]['money'] >= space["buy_price"]:
+            if space["owner"] == "":
+                return True
     return False
 
 
@@ -197,18 +242,11 @@ def build_hotel(player_id, position, players):
             players[player_id]['money'] -= space['hotel_cost']
             space['houses'] = 0
             space['hotel'] = 1
+            add_hotel_to_properties(player_id, position, players)
 
 
 def handle_bankruptcy():
     print('not complete')
-
-
-def check_even_houses(color):
-    positions = color_groups[color]
-    levels = [board[pos].get("houses", 0) for pos in positions]
-    if max(levels) - min(levels) > 1:
-        return False  # houses not even
-    return True  # houses evenly distributed
 
 
 def sell_hotel(player_id, position, players):
@@ -226,7 +264,7 @@ def sell_house(player_id, position, players):
         return False  # not owner or not property
     if space.get("houses", 0) <= 0:
         return False  # no houses to sell
-    if not check_even_houses(space["color"]):
+    if not check_even_houses(space["color"], position, 'sell',player_id, players):
         return False,  # houses not evenly distributed
     refund = space["house_cost"] // 2
     players[player_id]["money"] += refund
@@ -238,30 +276,87 @@ def find_available_houses(player_id, players):
     available_houses = []
     pos_houses = []
     for checker in range(40):
-        space = board[checker - 1]
+        space = board[checker]
         if space["type"] == "property":
             if space["owner"] == player_id:
                 if space.get("houses", 0) > 0:
-                    available_houses.append(f'square {(checker+1)} with {space.get('houses', 0)} houses')
+                    available_houses.append(f'square {(checker+1)} with {space.get('houses', 0)} houses\n') # we can use this for more information
                     pos_houses.append(checker+1)
     return available_houses, pos_houses
-def find_available_hotel(player_id, players):
+
+
+def find_available_hotel(player_id, players):  # if you have hotel you can sell it without worrying
     available_hotels = []
     pos_hotels = []
     for checker in range(40):
-        space = board[checker - 1]
+        space = board[checker]
         if space["type"] == "property":
             if space["owner"] == player_id:
                 if space.get("hotel", 0) == 1:
-                    available_hotels.append(f'square {(checker + 1)} with {space.get('hotel')} hotel')
-                    pos_hotels.append(checker + 1)
-    return available_hotels, pos_hotels
+                    available_hotels.append(f'square {(checker + 1)} with {space.get('hotel'),0} hotel')
+                    pos_hotels.append(str(checker + 1))
+    positions = pos_hotels
+    return pos_hotels
+
+
 def houses_available_for_sale(player_id, players):
     houses_for_sale = []
     positions = find_available_houses(player_id, players)[1]
     for position in positions:
-        space = board[position]
+        space = board[position - 1]
         if space.get("hotel", 0) == 0:
-            if check_even_houses(space["color"]):
-                houses_for_sale.append(position + 1)
+            if check_even_houses(space["color"], position, 'sell',player_id, players):
+                houses_for_sale.append(str(position))
     return houses_for_sale
+
+
+def changing_owner(removed_player_id, position):
+    space = board[position - 1]
+    player_id = space['owner']
+    for i in range(40):
+        space = board[i]
+        if space["owner"] == removed_player_id:
+            space["owner"] = player_id
+
+
+def can_mortgage(player_number, players):
+    print(board)
+    lst = []
+    for i in range(40):
+        space = board[i]
+        if space["owner"] == player_number:
+            if space["type"] in ["property", "railroad", "utility"]:
+                if space.get('mortgaged', False) == True:
+                    continue
+                if space["type"] == "property":
+                    for j in color_groups[space['color']]:
+                        c_space = board[j - 1]
+                        if c_space.get('houses', 0) != 0:
+                            break
+                        if c_space.get('hotel', 0) != 0:
+                            break
+                    else:
+                        lst.append(str(i+1))
+                else:
+                    lst.append(str(i+1))
+    return lst
+
+
+def find_mortgage_need(player_id, players):
+    lst = []
+    for i in range(40):
+        space = board[i]
+        if space.get('mortgaged', False) == True:
+            cost = int((space["buy_price"] // 2) * 1.1)
+            if cost <= players[player_id]["money"]:
+                if space['owner'] == player_id:
+                    lst.append(str(i+1))
+    return lst
+
+def find_all_can_build_houses(player_id, players):
+    lst = []
+    for i in range(40):
+        if can_build_house(player_id, i, players):
+            lst.append(str(i+1))
+
+
