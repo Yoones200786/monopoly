@@ -1,5 +1,4 @@
 from board_setup import board, color_groups, railroad_positions, utility_positions
-from load_save import state
 
 
 def has_monopoly(player_id, color):
@@ -206,7 +205,7 @@ def can_build_house(player_id, position, players):
         count_houses_in_every_color = []
         color_of_space = space['color']
         if has_monopoly(player_id, space["color"]):
-            if state["players"][player_id]['money'] > space["house_cost"]:
+            if players[player_id]['money'] > space["house_cost"]:
                 for i in color_groups[color_of_space]:
                     idx_color_space.append(i)
                 for i in idx_color_space:

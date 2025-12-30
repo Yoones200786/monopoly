@@ -4,6 +4,7 @@ import random
 import golami as gm
 from board_setup import monopoly_data
 from load_save import state
+from sh import random_chance_card
 """
 player_num = 1
 players_square = dict()
@@ -12,10 +13,10 @@ for i in range(1, 5):
 """
 
 players_square = dict()
+print(state)
 players = state["players"]
-player = 1
 for i in players:
-    players_square[i] = players[i]['position']
+    players_square[int(i)] = players[i]['position']
 player_num = state['current_turn']
 
 
@@ -239,9 +240,39 @@ while True:
     rent = gm.calculate_rent(square_num, player_num, dice_sum)
     print(f'player {player_num} in square {square_num}')
     print(f'you have to pay {rent}$ of rent')
+    skip = False
+    got_money = False
     if pre_square_num >= square_num:
         players[player_num]['money'] += 200
         print('you got 200$ cause you passed GO!')
+        got_money = 1
+    if square_num in [8, 23, 37]:
+        Random = random_chance_card(player_num, players)
+        print(Random)
+        if Random == 'GO':
+            square_num = 1
+            if got_money != 1:
+                players[player_num]['money'] += 200
+
+        elif Random == 'skip':
+            skip = True
+        elif Random == 'nextp80' or Random == 'nextp50':
+            print('hi')
+            future_player = next_person_move(player_num)
+            if Random == 'nextp80':
+                players[future_player]['money'] += 80
+                players[player_num]['money'] -= 80
+            else:
+                players[future_player]['money'] += 50
+                print(players[future_player])
+                players[player_num]['money'] -= 50
+
+        elif Random == 'boardwalk':
+            square_num = 40
+
+
+#    elif square_num in [3, 18, 34]:
+
 
     if players[player_num]['money'] < rent:
         handle_bankruptcy(player_num, players, rent)
@@ -250,11 +281,18 @@ while True:
         if rent > 0:
             players[player_num]['money'] -= rent
             gm.giving_money_to_player(player_num, square_num, players, rent)
+
+
     if player_num in players:
         players[player_num]['position'] = square_num
         print('your current state is:    propertiesInfo:(color, houses, hotel)/utility/rail')
         print(players[player_num])
         gm.show_info_of_current_space(square_num)
+        if skip:
+            player_num = next_person_move(player_num)
         player_num = menu(player_num, square_num, players, rent)
+
     else:
+        if skip:
+            player_num = next_person_move(player_num)
         player_num = next_person_move(player_num)
