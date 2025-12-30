@@ -1,0 +1,41 @@
+{
+    "current_turn": 1,
+    "players": {
+        "1": {
+            "username": "amirfomic",
+            "position": 1,
+            "money": 1500,
+            "properties": [],
+            "in_jail": false,
+            "jail_turns": 0,
+            "get_out_of_jail_cards": 0
+        },
+        "2": {
+            "username": "amirfomic2",
+            "position": 1,
+            "money": 1500,
+            "properties": [],
+            "in_jail": false,
+            "jail_turns": 0,
+            "get_out_of_jail_cards": 0
+        },
+        "3": {
+            "username": "amirfomic4",
+            "position": 1,
+            "money": 1500,
+            "properties": [],
+            "in_jail": false,
+            "jail_turns": 0,
+            "get_out_of_jail_cards": 0
+        },
+        "4": {
+            "username": "amirfomic5",
+            "position": 1,
+            "money": 1500,
+            "properties": [],
+            "in_jail": false,
+            "jail_turns": 0,
+            "get_out_of_jail_cards": 0
+        }
+    }
+}

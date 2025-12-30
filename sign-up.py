@@ -76,13 +76,17 @@ def signupmenu():
             else:
                 print("Invalid username or password")
                 print("1. Try again")
-                print("2. Exit to signup menu")
+                print("2. Exit to mainmenu")
                 choice2 = input("Enter your choice (1-2): ")
                 if choice2 == "2":
                     mainmenu()  
         
-        with open("current-game.json", "w") as f:
-            json.dump(players, f, indent=4)
+        with open("player_data.json", "r") as f:
+            player_data = json.load(f)
+            for i in range(1,5):
+                player_data["players"][str(i)]["username"] = players[i]
+        with open("player_data.json", "w") as f:
+            json.dump(player_data, f , indent=4)
         newgame()
     elif choice == "3":
         mainmenu()
@@ -137,10 +141,3 @@ def loadgame():
 def leaderboard():
     print ("The Functuion is not ready yet!")
 mainmenu()
-
-
-
-
-   
-
-
