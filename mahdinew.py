@@ -24,15 +24,14 @@ def showing_option(player_num, square_num, players, code=True, debt=False):
     order_list = []
     if not debt:
         order_list = ['next -> move to next player']
-
-    if gm.can_build_house(player_num, square_num, players) and code:
-        order_list.append(f"house -> you can build home here with price of {monopoly_data[str(square_num)]['house_cost']} in color {monopoly_data[str(square_num)]['color']}")
+    if gm.find_all_can_build_houses(player_num, players) and code:
+        order_list.append(f"house -> you can build some houses enter command to see list of it!")
         orders.append('house')
     if gm.is_land_buyable(player_num, square_num, players) and code:
         order_list.append(f"land -> you can buy land here with price of {monopoly_data[str(square_num)]['buy_price']} in color {monopoly_data[str(square_num)]['color']}")
         orders.append('land')
-    if gm.can_build_hotel(player_num, square_num, players) and code:
-        order_list.append(f"hotel -> you can build home here with price of {monopoly_data[str(square_num)]['hotel_cost']} in color {monopoly_data[str(square_num)]['color']}")
+    if gm.find_all_can_build_hotel(player_num, players) and code:
+        order_list.append(f"hotel -> you can build some houses enter command to see list of it!")
         orders.append('hotel')
     if gm.can_buy_railroad(player_num, square_num, players) and code:
         order_list.append(f"railroad -> you can buy railroad here with price of {monopoly_data[str(square_num)]['buy_price']}")
@@ -72,7 +71,6 @@ def menu(player_num, square_num, players, rent, code=True, debt=False):
         remove_player(player_num)
         player_num = next_person_move(player_num)
         return
-    print('im at start of while')
     while input_is_not_valid:
         next_order = input(str_orders)
         if next_order in orders:
@@ -83,13 +81,29 @@ def menu(player_num, square_num, players, rent, code=True, debt=False):
             player_num = next_person_move(player_num)
             return player_num
         if next_order == 'house' and code:
-            gm.build_house(player_num, square_num, players)
-            code = False
-            return menu(player_num, square_num, players, rent, code, debt)
+            lst = gm.find_all_can_build_houses(player_num, players)
+            while True:
+                option = input(f'here is list of lands you can build house on{lst}.enter your favourite option if you changed your mind enter -1')
+                if option == '-1':
+                    return menu(player_num, square_num, players, rent, code, debt)
+                elif option in lst:
+                    gm.build_house(player_num, int(option), players)
+                    code = False
+                    return menu(player_num, square_num, players, rent, code, debt)
+                else:
+                    print('invalid option! plz try again')
         if next_order == 'hotel' and code:
-            gm.build_hotel(player_num, square_num, players)
-            code = False
-            return menu(player_num, square_num, players, rent, code, debt)
+            lst = gm.find_all_can_build_hotel(player_num, players)
+            while True:
+                option = input(f'here is list of lands you can build hotel on{lst}.enter your favourite option if you changed your mind enter -1')
+                if option == '-1':
+                    return menu(player_num, square_num, players, rent, code, debt)
+                elif option in lst:
+                    gm.build_hotel(player_num, int(option), players)
+                    code = False
+                    return menu(player_num, square_num, players, rent, code, debt)
+                else:
+                    print('invalid option! plz try again')
         if (next_order == 'railroad' or next_order == 'utility' or next_order == 'land') and code:
             gm.buy_property(player_num, square_num, players)
             code = False
@@ -157,7 +171,6 @@ def menu(player_num, square_num, players, rent, code=True, debt=False):
                     pos = int(option)
                     print('hi')
                     gm.unmortgage_property(player_num, pos, players)
-                    print(player_num,'/////////////////////////////////////////////////////////////')
                     return menu(player_num, square_num, players, rent, code, debt)
                 else:
                     print('your input is not valid! plz try again')
@@ -220,7 +233,6 @@ def handle_bankruptcy(player_num, players, rent):
 
 while True:
     print(colorama.Fore.GREEN + colorama.Style.BRIGHT + "---new turn starts!---" + colorama.Style.RESET_ALL)
-    print(player_num)
     square_num = players_square[player_num]
     pre_square_num = square_num
     player_num, square_num, dice_sum, picked_same = new_turn(player_num, square_num)

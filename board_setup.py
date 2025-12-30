@@ -239,7 +239,7 @@ monopoly_data = {
         "rent": [22, 110, 330, 800, 975, 1150],
         "house_cost": 150,
         "hotel_cost": 150
-        , "owner": ""
+        , "owner":  ""
 
     },
     "28": {

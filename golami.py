@@ -19,6 +19,14 @@ def add_house_to_properties(player_id, position, players):
             if j == f"square {position}":
                 i[j][1] += 1
 
+def sell_house_from_properties(player_id,position,players):
+    for i in players[player_id]["properties"]:
+        for j in i:
+            if j == f"square {position}":
+                i[j][1] -= 1
+
+
+
 
 def count_utilities(player_id):
     return sum(1 for pos in utility_positions if board[pos - 1]["owner"] == player_id)  #"player has y utility."
@@ -59,7 +67,6 @@ def calculate_rent(position, current_player_id, dice_sum=0):
     if space["type"] == 'tax':
         print('you landed on a tax square!')
         return space["amount"]
-
     if space.get("owner") == "" or space["owner"] == current_player_id or space.get("mortgaged", False):
         return 0
     if space["type"] == "property":
@@ -100,7 +107,7 @@ def buy_property(player_id, position, players):
         else:
             suitable_info = [space['type']]
         players[player_id]["properties"].append({f'square {position}': suitable_info})
-        print('bought successfully!')
+        print('bought property successfully!')
         return True
     return False  #"this property is not buy_able"
 
@@ -132,9 +139,7 @@ def unmortgage_property(player_id, position, players):
     space = board[position -1]
     if space["type"] in ["property", "railroad", "utility"] and \
             space["owner"] == player_id and space.get("mortgaged", False):
-        print('hello')
         cost = int((space["buy_price"] // 2) * 1.1)
-        print(players[player_id]["money"] >= cost)
         if players[player_id]["money"] >= cost:
             print('unmortgaged successfully!')
             players[player_id]["money"] -= cost
@@ -156,7 +161,7 @@ def build_house(player_id, position, players):
         return False, "not enough money"
     players[player_id]["money"] -= cost
     space["houses"] = space.get("houses", 0) + 1
-    print('bought successfully!')
+    print('bought house successfully!')
     add_house_to_properties(player_id, position, players)
     return True, f"one house made: {cost}"
 
@@ -243,11 +248,7 @@ def build_hotel(player_id, position, players):
             space['houses'] = 0
             space['hotel'] = 1
             add_hotel_to_properties(player_id, position, players)
-
-
-def handle_bankruptcy():
-    print('not complete')
-
+            print('bought hotel successfully!')
 
 def sell_hotel(player_id, position, players):
     space = board[position - 1]
@@ -269,6 +270,7 @@ def sell_house(player_id, position, players):
     refund = space["house_cost"] // 2
     players[player_id]["money"] += refund
     space["houses"] -= 1
+    sell_house_from_properties(player_id, position, players)
     print(f"house sold for {refund}$")
 
 
@@ -356,7 +358,13 @@ def find_mortgage_need(player_id, players):
 def find_all_can_build_houses(player_id, players):
     lst = []
     for i in range(40):
-        if can_build_house(player_id, i, players):
+        if can_build_house(player_id, i + 1, players):
             lst.append(str(i+1))
-
+    return lst
+def find_all_can_build_hotel(player_id, players):
+    lst = []
+    for i in range(40):
+        if can_build_hotel(player_id, i + 1, players):
+            lst.append(str(i+1))
+    return lst
 
