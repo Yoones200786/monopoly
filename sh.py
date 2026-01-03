@@ -1,6 +1,8 @@
 import random
 import json
+import golami as gm
 from map import move_player
+
 with open("current-game.json", "r") as f:
     username_dict = json.load(f)
 
@@ -56,14 +58,15 @@ def save_game():
 chance_card = ["get out of jail free", "go directory to jail", "pay 15$ to the bank", "move to GO and get 200$"
                , "get 150$ from the bank", "pay 20$ to the bank",
                "give the next player 80$", "Give the next person $50", "pay 100$ to the bank", "skip next player", 'move to board walk']
-community_chest = ["receive 200$ form bank", "get 50$ from next previous", "give the next player 100$",
-                   "sell one of your houses", "move to free parking", "receive 50$ form bank",
-                   "give the next player 150$"]
-chance_card = ["give the next person $50"]
+
+community_chest = ["receive 200$ form bank", "give the next player 100$","sell one of your houses", "move to free parking",
+                   "receive 50$ form bank",
+                   "give the next player 150$","pick another card", "skip next player"]
+
 cards = {"p1": [], "p2": [], "p3": [], "p4": []}
 card_keys = list(cards.keys())
 card_values = list(cards.values())
-
+community_chest = ["give the next player 100$"]
 
 def random_chance_card(player, players):
     random_card = random.choice(chance_card)
@@ -89,7 +92,6 @@ def random_chance_card(player, players):
         players[player]['money'] -= 20
     elif random_card == "give the next player 80$":
         return 'nextp80'
-
     elif random_card == "give the next person $50":
         return 'nextp50'
     elif random_card == "pay 100$ to the bank":
@@ -100,13 +102,35 @@ def random_chance_card(player, players):
 
 def random_community_chest(player, players):
     random_card = random.choice(community_chest)
-    print('you entered in chance square! this is the card which you got!')
+    print('you entered in community chest! this is the card which you got!')
     print(random_card)
     if random_card == "receive 200$ form bank":
         players[player]['money'] += 200
-    #elif random_card == "sell one of your houses":
-
-
+    elif random_card == "sell one of your houses":
+        lst_houses = gm.houses_available_for_sale(player, players)
+        if not lst_houses:
+            print('since you dont have any house available for sell you will continue!')
+        else:
+            option = input(f'{lst_houses}choose one of your houses to sell')
+            while option not in lst_houses:
+                print('invalid input! try again')
+                option = input(f'{lst_houses}choose one of your houses to sell')
+            option = int(option)
+            gm.sell_house(player, option, players)
+    #elif random_card == "get 50$ from previous player":
+    elif random_card == "pick another card":
+        print('pick another card!')
+        random_community_chest(player, players)
+    elif random_card == "give the next player 100$":
+        return 'cnext100'
+    elif random_card == "move to free parking":
+        return 'freeparking'
+    elif random_card == "receive 50$ form bank":
+        players[player]['money'] += 50
+    elif random_card == "give the next player 150$":
+        return 'cnextp150'
+    elif random_card == "skip next player":
+        return 'skip'
 
 def jail():
     if player_num == 31:

@@ -8,7 +8,7 @@ state = {
         1: {
             "username": "player1",
             "position": 1,
-            "money": 1500,
+            "money": 15000,
             "properties": [],
             "in_jail": False,
             "jail_turns": 0,
@@ -16,9 +16,9 @@ state = {
         },
         2: {
             "username": "player2",
-            "position": 1,
-            "money": 1500,
-            "properties": [],
+            "position": 10,
+            "money": 90,
+            "properties": [{'square 9': ['light_blue', 0, 0, False]}],
             "in_jail": False,
             "jail_turns": 0,
             "get_out_of_jail_cards": 0
@@ -26,7 +26,7 @@ state = {
         3: {
             "username": "player3",
             "position": 1,
-            "money": 1500,
+            "money": 1000,
             "properties": [],
             "in_jail": False,
             "jail_turns": 0,
@@ -35,7 +35,7 @@ state = {
         4: {
             "username": "player4",
             "position": 1,
-            "money": 1500,
+            "money": 1000,
             "properties": [],
             "in_jail": False,
             "jail_turns": 0,
@@ -55,7 +55,6 @@ for i in players:
 current_turn = state["current_turn"]
 state2["current_turn"] = current_turn
 state = state2
-print(state)
 players = state["players"]
 with open('current-game.json', 'r') as w:
     dict_username = json.load(w)

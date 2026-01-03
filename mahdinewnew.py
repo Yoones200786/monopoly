@@ -2,13 +2,11 @@ import colorama
 colorama.init()
 import random
 import golami as gm
-import yonesjail as yj
 from board_setup import monopoly_data
 from load_save import state
 from sh import random_chance_card, random_community_chest
-
-
 players_square = dict()
+print(state)
 players = state["players"]
 for i in players:
     players_square[int(i)] = players[i]['position']
@@ -47,25 +45,30 @@ def showing_option(player_num, square_num, players, code=True, debt=False):
     if gm.find_mortgage_need(player_num, players):
         order_list.append('unmortgage -> you can mortgage some of your lands choose this to see available ones')
         orders.append('unmortgage')
+
+
+
     str_orders = '\n'.join(order_list)
     return str_orders, orders
-def menu(player_num, square_num, players, rent, code=True, debt=False, auto_next=False):
-    if auto_next and not debt:
-        return
+
+
+def menu(player_num, square_num, players, rent, code=True, debt=False):
     input_is_not_valid = True
     print('/_ _ _ _ _ choose from following options _ _ _ _ _ /')
     str_orders, orders = showing_option(player_num, square_num, players, code, debt)
     if debt:
         orders.remove('next')
+
     if len(orders) == 0:
         print(f'player {player_num} you are '+colorama.Fore.RED + colorama.Style.BRIGHT+'ELIMINATED!' + colorama.Style.RESET_ALL)
         if square_num in [8, 23, 37, 3, 18, 34]:
             future_player = next_person_move(player_num)
+
         gm.changing_owner(player_num, square_num)
-        if gm.board[square_num - 1]['type'] == 'property':
+        if monopoly_data[square_num - 1]['type'] == 'property':
             players[monopoly_data[square_num - 1]['owner']]['money'] += players[player_num]['money']
-        elif gm.board[square_num - 1]['type'] == "community_chest" or monopoly_data[square_num - 1]['type'] == "chance":
-            players[future_player]['money'] += players[player_num]['money']
+        elif monopoly_data[square_num - 1]['type'] == "community_chest" or monopoly_data[square_num - 1]['type'] == "chance":
+            players[monopoly_data[square_num - 1]][future_player] += players[player_num]['money']
         remove_player(player_num)
         player_num = next_person_move(player_num)
         return
@@ -78,7 +81,7 @@ def menu(player_num, square_num, players, rent, code=True, debt=False, auto_next
     if next_order == 'next':
         player_num = next_person_move(player_num)
         return player_num
-    if next_order == 'house' and code and not debt:
+    if next_order == 'house' and code:
         lst = gm.find_all_can_build_houses(player_num, players)
         while True:
             option = input(f'here is list of lands you can build house on{lst}.enter your favourite option if you changed your mind enter -1')
@@ -90,7 +93,7 @@ def menu(player_num, square_num, players, rent, code=True, debt=False, auto_next
                 return menu(player_num, square_num, players, rent, code, debt)
             else:
                 print('invalid option! plz try again')
-    if next_order == 'hotel' and code and not debt:
+    if next_order == 'hotel' and code:
         lst = gm.find_all_can_build_hotel(player_num, players)
         if not lst:
             return menu(player_num, square_num, players, rent, code, debt)
@@ -104,7 +107,7 @@ def menu(player_num, square_num, players, rent, code=True, debt=False, auto_next
                 return menu(player_num, square_num, players, rent, code, debt)
             else:
                 print('invalid option! plz try again')
-    if (next_order == 'railroad' or next_order == 'utility' or next_order == 'land') and code and not debt:
+    if (next_order == 'railroad' or next_order == 'utility' or next_order == 'land') and code:
         gm.buy_property(player_num, square_num, players)
         code = False
         return menu(player_num, square_num, players, rent, code, debt)
@@ -127,8 +130,7 @@ def menu(player_num, square_num, players, rent, code=True, debt=False, auto_next
         if players[player_num]['money'] >= rent and debt:
             debt = False
             code = True
-            auto_next = True
-        return menu(player_num, square_num, players, rent, code, debt,auto_next)
+        return menu(player_num, square_num, players, rent, code, debt)
     if next_order == 'sell_house':
         houses = gm.houses_available_for_sale(player_num, players)
         if not houses:
@@ -144,8 +146,8 @@ def menu(player_num, square_num, players, rent, code=True, debt=False, auto_next
                 if players[player_num]['money'] >= rent and debt:
                     debt = False
                     code = True
-                    auto_next = True
-                return menu(player_num, square_num, players, rent, code, debt,auto_next)
+                    print('congratulations!you are no longer in debt!')
+                return menu(player_num, square_num, players, rent, code, debt)
             else:
                 print('your input is not valid! plz try again')
     if next_order == 'mortgage':
@@ -163,8 +165,7 @@ def menu(player_num, square_num, players, rent, code=True, debt=False, auto_next
                 if players[player_num]['money'] >= rent and debt:
                     debt = False
                     code = True
-                    auto_next = True
-                return menu(player_num, square_num, players, rent, code, debt,auto_next)
+                return menu(player_num, square_num, players, rent, code, debt)
             else:
                 print('your input is not valid! plz try again')
     if next_order == 'unmortgage' and not debt:
@@ -196,8 +197,8 @@ def new_turn(player_num, square_num, dice_sum=0, picked_same=0):
         return player_num, 11, dice_sum, picked_same
     tas1 = random.randrange(1, 7)
     tas2 = random.randrange(1, 7)
-    tas1 = 3
-    tas2 = 5
+    tas1 = 1
+    tas2 = 0
     print('tas1:',tas1,'tas2:',tas2)
     square_num += tas1 + tas2
     square_num = square_num % 41
@@ -238,7 +239,6 @@ def handle_bankruptcy(player_num, players, rent):
         menu(player_num, square_num, players, rent, True, True)
         if player_num not in players:
             return
-    print('congratulations!you are no longer in debt!')
 
 
 def load_game():
@@ -262,8 +262,9 @@ if __name__ == "__main__":
         pre_square_num = square_num
         player_num, square_num, dice_sum, picked_same = new_turn(player_num, square_num)
         state['current_turn'] = player_num
+        if players[player_num]['in'] == 'property':
+
         rent = gm.calculate_rent(square_num, player_num, dice_sum)
-        future_player = next_person_move(player_num)
         print(f'player {player_num} in square {square_num}')
         print(f'you have to pay {rent}$ of rent')
         skip = False
@@ -285,7 +286,6 @@ if __name__ == "__main__":
                 future_player = next_person_move(player_num)
                 if Random == 'nextp80':
                    if players[player_num]['money'] < 80:
-                       rent += 80
                        handle_bankruptcy(player_num, players, 80)
                    else:
                        players[player_num]['money'] -= 80
@@ -293,41 +293,56 @@ if __name__ == "__main__":
                 else:
                     if players[player_num]['money'] < 50:
                         handle_bankruptcy(player_num, players, 50)
-                        rent += 50
                     else:
                         players[player_num]['money'] -= 50
                         players[future_player]['money'] += 50
             elif Random == 'boardwalk':
                 square_num = 40
+
+
+
+
+
+
+
+
         elif square_num in [3, 18, 34]:  #adding community chest
             Random = random_community_chest(player_num, players)
             if Random == 'cnext100':
                 next_player = next_person_move(player_num)
                 if players[player_num]['money'] < 100:
-                    rent += 100
                     handle_bankruptcy(player_num, players, 100)
                 else:
                     players[player_num]['money'] -= 100
                     players[next_player]['money'] += 100
+
             elif Random == "move to free parking":
                 square_num = 21
             elif Random == 'cnextp150':
                 next_player = next_person_move(player_num)
-                if players[player_num]['money'] < 150:
-                    rent += 150
-                    handle_bankruptcy(player_num, players, 150)
+                if players[player_num]['money'] < 100:
+                    handle_bankruptcy(player_num, players, 100)
                 else:
-                    players[player_num]['money'] -= 150
-                    players[next_player]['money'] += 150
+                    players[player_num]['money'] -= 100
+                    players[next_player]['money'] += 100
             elif Random == 'skip':
                 skip = True
+
+
+
+
+
+
+
+
+
+        if players[player_num]['money'] < rent:
+            handle_bankruptcy(player_num, players, rent)
+        else:
+            if rent > 0:
+                players[player_num]['money'] -= rent
+                gm.giving_money_to_player(player_num, square_num, players, rent)
         if player_num in players:
-            if players[player_num]['money'] < rent:
-                handle_bankruptcy(player_num, players, rent)
-            else:
-                if rent > 0:
-                    players[player_num]['money'] -= rent
-                    gm.giving_money_to_player(player_num, square_num, players, rent, future_player)
             players[player_num]['position'] = square_num
             print('your current state is:    propertiesInfo:(color, houses, hotel)/utility/rail')
             print(players[player_num])
@@ -336,4 +351,6 @@ if __name__ == "__main__":
                 player_num = next_person_move(player_num)
             player_num = menu(player_num, square_num, players, rent)
         else:
+            if skip:
+                player_num = next_person_move(player_num)
             player_num = next_person_move(player_num)

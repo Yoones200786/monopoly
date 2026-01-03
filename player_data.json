@@ -4,7 +4,7 @@
         "1": {
             "username": "player1",
             "position": 1,
-            "money": 1500,
+            "money": 15000,
             "properties": [],
             "in_jail": false,
             "jail_turns": 0,
@@ -12,9 +12,18 @@
         },
         "2": {
             "username": "player2",
-            "position": 1,
-            "money": 1500,
-            "properties": [],
+            "position": 10,
+            "money": 90,
+            "properties": [
+                {
+                    "square 9": [
+                        "light_blue",
+                        0,
+                        0,
+                        false
+                    ]
+                }
+            ],
             "in_jail": false,
             "jail_turns": 0,
             "get_out_of_jail_cards": 0
@@ -22,7 +31,7 @@
         "3": {
             "username": "player3",
             "position": 1,
-            "money": 1500,
+            "money": 1000,
             "properties": [],
             "in_jail": false,
             "jail_turns": 0,
@@ -31,7 +40,7 @@
         "4": {
             "username": "player4",
             "position": 1,
-            "money": 1500,
+            "money": 1000,
             "properties": [],
             "in_jail": false,
             "jail_turns": 0,
