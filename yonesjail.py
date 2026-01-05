@@ -21,10 +21,10 @@ def handle_jail(players, player_id):
         print("1 - Pay 50$")
         print("2 - Use get out of jail free card")
         print("3 - Try for a double")
-
+        print("4 - Quit")
         try:
             choice = int(input("Selected option: "))
-            if choice not in (1, 2, 3):
+            if choice not in (1, 2, 3, 4):
                 print("Invalid choice. Try again.")
                 continue
         except ValueError:
@@ -36,41 +36,34 @@ def handle_jail(players, player_id):
             if player["money"] < 50:
                 print("Not enough money")
                 continue
-
             player["money"] -= 50
             player["in_jail"].clear()
             player["jail_turns"] = 0
-            print("You paid 50$ and got out of jail")
-            break
+            print("You paid 50$ and got out of jail! you will continue your turn.")
+            return True
 
         # Use get out of jail card
         elif choice == 2:
-            if player["get_out_of_jail_cards"]!= 1:
-#            if "get out of jail free" not in player_cards:
+            if player["get_out_of_jail_cards"] != 1:
                 print("You don't have a get out of jail free card")
                 continue
-#            player_cards.remove("get out of jail free")
-#            chance_card.append("get out of jail free")
             player["in_jail"].clear()
             player['get_out_of_jail_cards'] -= 1
             player["jail_turns"] = 0
-            print("You used a card and got out of jail")
+            print("You used a card and got out of jail! you will continue your turn.")
             return True
 
         # Try for a double
         elif choice == 3:
             d1 = random.randint(1, 6)
             d2 = random.randint(1, 6)
-            d1 = 1
-            d2 = 2
+            d1 = 2
+            d2 = 1
             print(f"Dice rolled: {d1}, {d2}")
             if d1 == d2:
                 player["in_jail"].clear()
                 player["jail_turns"] = 0
-                player["position"] = (player["position"] + d1 + d2) % 40
                 print("Double! You are free and move forward")
-                print('im in handle jail')
-
                 return True, (d1+d2)
             else:
                 player["jail_turns"] += 1
@@ -92,8 +85,15 @@ def handle_jail(players, player_id):
                         #     elif choice == "2":
                         #         sell_hotel(player_id, position, players)
                         #     elif choice == "3":
-                        mn.handle_bankruptcy(player_id,players,50)
-                            # Check again if the player has enough money
+                        result_handle_bankruptcy = mn.handle_bankruptcy(player_id, players, 50, 11)
+                        if result_handle_bankruptcy:
+                            player["in_jail"].clear()
+                            player["jail_turns"] = 0
+                            print("You paid 50$ and got out of jail! you will continue your turn.")
+                            return True
+                        else:
+                            return False
+                        # Check again if the player has enough money
                         #if player["money"] >= 50:
                         #        break  # If the player has enough money, exit the loop
                     else:
@@ -104,3 +104,5 @@ def handle_jail(players, player_id):
                         return True
                 else:
                     return False
+        elif choice == 4:
+            return "cancel"

@@ -7,9 +7,10 @@ from board_setup import monopoly_data
 from load_save import state
 from sh import random_chance_card, random_community_chest
 already_tried_getting_out = []
-dices_after_prision = []
+dices_after_prison = []
 should_skip = []
 lst_picked_same = []
+lst_just_got_out_of_jail = []
 players_square = dict()
 players = state["players"]
 for i in players:
@@ -21,10 +22,11 @@ def showing_option(player_num, square_num, players, code=True, debt=False):
     if players[player_num]['in_jail']:
         code = False
     orders = ['next']
-    order_list = []
-    if not debt:
-        order_list = ['next -> move to next player']
-    if players[player_num]['in_jail'] and not already_tried_getting_out:
+    order_list = ['next -> move to next player']
+    print(players[player_num]['jail_turns'])
+    if debt or (players[player_num]['jail_turns'] == 2 and not already_tried_getting_out):
+        order_list.remove('next -> move to next player')
+    if players[player_num]['in_jail'] and not already_tried_getting_out and not debt:
         order_list.append('jail -> handle jail')
         orders.append('jail')
     if gm.find_all_can_build_houses(player_num, players) and code:
@@ -57,9 +59,9 @@ def showing_option(player_num, square_num, players, code=True, debt=False):
     str_orders = '\n'.join(order_list)
     return str_orders, orders
 
-
+def return_already_tried_getting_out():
+    return already_tried_getting_out
 def menu(player_num, square_num, players, rent, code=True, debt=False, auto_next=False,):
-    print('/////////////////////',gm.board)
     if auto_next and not debt:
         return
     input_is_not_valid = True
@@ -67,7 +69,7 @@ def menu(player_num, square_num, players, rent, code=True, debt=False, auto_next
     str_orders, orders = showing_option(player_num, square_num, players, code, debt)
     if players[player_num]['in_jail']:
         code = False
-    if debt:
+    if debt or (players[player_num]['jail_turns'] == 2 and not already_tried_getting_out):
         orders.remove('next')
     if len(orders) == 0:
         print(f'player {player_num} you are '+colorama.Fore.RED + colorama.Style.BRIGHT+'ELIMINATED!' + colorama.Style.RESET_ALL)
@@ -79,6 +81,9 @@ def menu(player_num, square_num, players, rent, code=True, debt=False, auto_next
         elif gm.board[square_num - 1]['type'] == "community_chest" or gm.board[square_num - 1]['type'] == "chance":
             players[future_player]['money'] += players[player_num]['money']
         remove_player(player_num)
+#        player_num = next_person_move(player_num)
+#        return player_num
+        print(players_square,'1')
         return
     while input_is_not_valid:
         next_order = input(str_orders)
@@ -87,10 +92,12 @@ def menu(player_num, square_num, players, rent, code=True, debt=False, auto_next
         else:
             print('option is not possible! please try again')
     if next_order == 'next':
-        if players[player_num]['in_jail']:
+        if players[player_num]['in_jail'] and not already_tried_getting_out:
             players[player_num]['jail_turns'] += 1
-        if not lst_picked_same:
+        if not lst_picked_same and not lst_just_got_out_of_jail:
             player_num = next_person_move(player_num)
+        if lst_just_got_out_of_jail:
+            lst_just_got_out_of_jail.clear()
         return player_num
     if next_order == 'house' and code and not debt:
         lst = gm.find_all_can_build_houses(player_num, players)
@@ -195,18 +202,32 @@ def menu(player_num, square_num, players, rent, code=True, debt=False, auto_next
             else:
                 print('your input is not valid! plz try again')
     if next_order == 'jail':
+        already_tried_getting_out.append('/')
         result = yj.handle_jail(players, player_num)
-        print(result)
+        return_already_tried_getting_out()
         if result:
-            if type(result) == tuple:
-                 dices_after_prision.append(result[1])
-                 return player_num
+            if result == 'cancel':
+                already_tried_getting_out.remove('/')
+                return menu(player_num, square_num, players, rent, code, debt)
             else:
-                return player_num
-
+                lst_just_got_out_of_jail.append('/')
+                if type(result) == tuple:
+                    dices_after_prison.append(result[1])
+                    return player_num
+                else:
+                    return player_num
         else:
-            already_tried_getting_out.append('/')
-            return menu(player_num, square_num, players, rent, code, debt)
+            print(players)
+            print(players_square)
+            if player_num not in players:
+                player_num = next_person_move(player_num)
+                pre_player_num = player_num
+                players_square.pop(player_num)
+                return player_num
+            else:
+                return menu(player_num, square_num, players, rent, code, debt)
+
+
 def go_to_jail(player_num):
     print(f'player{player_num} went to JAIL')
     players_square[player_num] = 11
@@ -215,17 +236,15 @@ def go_to_jail(player_num):
 
 
 def new_turn(player_num, square_num, dice_sum=0):
-    if players[player_num]['in_jail'] and not already_tried_getting_out:
-        if not already_tried_getting_out:
-            players[player_num]['in_jail'].append('/')
+    if players[player_num]['in_jail']:
+        players[player_num]['in_jail'].append('/')
         return player_num, square_num, 0
     tas1 = random.randrange(1, 7)
     tas2 = random.randrange(1, 7)
-    tas1 = 0
-    tas2 = 1
-    print(dices_after_prision)
-    if dices_after_prision:
-        tas1 = dices_after_prision.pop()
+    tas1 = 6
+    tas2 = 5
+    if dices_after_prison:
+        tas1 = dices_after_prison.pop()
         tas2 = 0
         print('you move on with your dices')
     else:
@@ -237,8 +256,6 @@ def new_turn(player_num, square_num, dice_sum=0):
     dice_sum = tas1 + tas2
     if tas1 == tas2:
         lst_picked_same.append('/')
-            #return player_num, 11, dice_sum
-
     else:
         lst_picked_same.clear()
     players_square[player_num] = square_num
@@ -257,21 +274,23 @@ def next_person_move(player_num):  #  finds out who's turn is next
 
 def remove_player(player_num):
     players_square.pop(player_num)  # if player does not  have money it gets eliminated
+    print('poped succesfully')
+    print(players_square)
     players.pop(player_num)
     if len(players) == 1:
         print('game over')
 
 
-def handle_bankruptcy(player_num, players, rent):
+def handle_bankruptcy(player_num, players, rent, square_num):
     while players[player_num]['money'] < rent:
         print(colorama.Fore.RED + colorama.Style.BRIGHT+'WARNING!'+colorama.Style.RESET_ALL+f'you have debt in amount of {-players[player_num]['money'] + rent}$')
-        print(square_num)
         menu(player_num, square_num, players, rent, True, True)
         if player_num not in players:
             return
     print('congratulations!you are no longer in debt!')
     players[player_num]['money'] -= rent
     return True
+
 
 def load_game():
     for player in players:
@@ -285,7 +304,6 @@ def load_game():
                     monopoly_data[pos_property]['hotel'] = dictionary[f'square {pos_property}'][2]
                     monopoly_data[pos_property]['mortgaged'] = dictionary[f'square {pos_property}'][3]
     return monopoly_data
-#def menu(player_num, square_num, players, rent, code=True, debt=False, auto_next=False,):
 
 
 if __name__ == "__main__":
@@ -293,8 +311,10 @@ if __name__ == "__main__":
         already_tried_getting_out.clear()
         print(colorama.Fore.GREEN + colorama.Style.BRIGHT + "---new turn starts!---" + colorama.Style.RESET_ALL)
         op = input('do you want to do anything befor rolling dice?(yes/or just enter to cancel)')
-        print(players_square)
-        print(player_num)
+        players_square = dict()
+        for i, j in players.items():
+            players_square[i] = j['position']
+
         square_num = players_square[player_num]
         if op == 'yes':
             lst_picked_same.append('/')
@@ -334,13 +354,13 @@ if __name__ == "__main__":
                 if Random == 'nextp80':
                    if players[player_num]['money'] < 80:
                        rent += 80
-                       handle_bankruptcy(player_num, players, 80)
+                       handle_bankruptcy(player_num, players, 80, square_num)
                    else:
                        players[player_num]['money'] -= 80
                        players[future_player]['money'] += 80
                 else:
                     if players[player_num]['money'] < 50:
-                        handle_bankruptcy(player_num, players, 50)
+                        handle_bankruptcy(player_num, players, 50, square_num)
                         rent += 50
                     else:
                         players[player_num]['money'] -= 50
@@ -355,7 +375,7 @@ if __name__ == "__main__":
                 next_player = next_person_move(player_num)
                 if players[player_num]['money'] < 100:
                     rent += 100
-                    handle_bankruptcy(player_num, players, 100)
+                    handle_bankruptcy(player_num, players, 100, square_num)
                 else:
                     players[player_num]['money'] -= 100
                     players[next_player]['money'] += 100
@@ -365,19 +385,20 @@ if __name__ == "__main__":
                 next_player = next_person_move(player_num)
                 if players[player_num]['money'] < 150:
                     rent += 150
-                    handle_bankruptcy(player_num, players, 150)
+                    handle_bankruptcy(player_num, players, 150, square_num)
                 else:
                     players[player_num]['money'] -= 150
                     players[next_player]['money'] += 150
             elif Random == 'skip':
                 skip = True
         if len(players[player_num]['in_jail']) == 1: # if its first time player enters jail, his turn ends and he can't do anything
+            lst_picked_same.clear()
             print("you just entered jail and you can't do any thing!")
             player_num = next_person_move(player_num)
             continue
         if player_num in players:
             if players[player_num]['money'] < rent:
-                handle_bankruptcy(player_num, players, rent)
+                handle_bankruptcy(player_num, players, rent, square_num)
             else:
                 if rent > 0:
                     players[player_num]['money'] -= rent
@@ -391,6 +412,7 @@ if __name__ == "__main__":
                     player_num = next_person_move(player_num)
                     should_skip.clear()
                 player_num = menu(player_num, square_num, players, rent,  True, False, False)
+                print(player_num)
             else:
                 player_num = next_person_move(player_num)
         else:

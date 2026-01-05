@@ -359,7 +359,7 @@ monopoly_data = {
         , "owner": ""
     }
 }
-from mahdinew import load_game
+from mahdinewdebug import load_game
 load_game()
 board = [None] * 40
 for key in monopoly_data:

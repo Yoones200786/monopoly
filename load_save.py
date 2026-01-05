@@ -7,19 +7,19 @@ state = {
     "players": {
         1: {
             "username": "player1",
-            "position": 1,
-            "money": 60,
+            "position": 20,
+            "money": 1,
             "properties": [],
             "in_jail": [],
             "jail_turns": 0,
-            "get_out_of_jail_cards": 1
+            "get_out_of_jail_cards": 0
 
         },
         2: {
             "username": "player2",
             "position": 1,
-            "money":1,
-            "properties": [{'square 9': ['light_blue', 0, 0, False]}],
+            "money":1000,
+            "properties": [],
             "in_jail": [],
             "jail_turns": 0,
             "get_out_of_jail_cards": 0
@@ -27,7 +27,7 @@ state = {
         3: {
             "username": "player3",
             "position": 1,
-            "money": 1,
+            "money": 1000,
             "properties": [],
             "in_jail": [],
             "jail_turns": 0,
@@ -35,8 +35,8 @@ state = {
         },
         4: {
             "username": "player4",
-            "position": 1,
-            "money": 1,
+            "position": 34,
+            "money": 1000,
             "properties": [],
             "in_jail": [],
             "jail_turns": 0,
