@@ -1,6 +1,7 @@
 # Send player to jail
 import random
-
+import mahdinewdebug as mn
+import golami as gm
 
 def send_to_jail(player):
     player["position"] = 11
@@ -11,7 +12,8 @@ def send_to_jail(player):
 # Manage jail options
 
 
-def handle_jail(player, player_cards, chance_card):
+def handle_jail(players, player_id):
+    player = players[player_id]
     print(f'\n{player["username"]} is in jail')
 
     while True:
@@ -36,72 +38,69 @@ def handle_jail(player, player_cards, chance_card):
                 continue
 
             player["money"] -= 50
-            player["in_jail"] = False
+            player["in_jail"].clear()
             player["jail_turns"] = 0
             print("You paid 50$ and got out of jail")
             break
 
         # Use get out of jail card
         elif choice == 2:
-            if "get out of jail free" not in player_cards:
+            if player["get_out_of_jail_cards"]!= 1:
+#            if "get out of jail free" not in player_cards:
                 print("You don't have a get out of jail free card")
                 continue
-
-
-            player_cards.remove("get out of jail free")
-
-
-            chance_card.append("get out of jail free")
-
-            player["in_jail"] = False
+#            player_cards.remove("get out of jail free")
+#            chance_card.append("get out of jail free")
+            player["in_jail"].clear()
+            player['get_out_of_jail_cards'] -= 1
             player["jail_turns"] = 0
             print("You used a card and got out of jail")
-            break
+            return True
 
         # Try for a double
         elif choice == 3:
             d1 = random.randint(1, 6)
             d2 = random.randint(1, 6)
+            d1 = 1
+            d2 = 2
             print(f"Dice rolled: {d1}, {d2}")
-
             if d1 == d2:
-                player["in_jail"] = False
+                player["in_jail"].clear()
                 player["jail_turns"] = 0
                 player["position"] = (player["position"] + d1 + d2) % 40
                 print("Double! You are free and move forward")
-                break
+                print('im in handle jail')
+
+                return True, (d1+d2)
             else:
                 player["jail_turns"] += 1
                 print("Not a double")
                 # After 3 turns, pay or sell
                 if player["jail_turns"] >= 3:
                     if player["money"] < 50:
-                        print("Not enough money after 3 turns")
-
-
-                        while player["money"] < 50:
-                            print("You need to sell houses/hotels to get enough money.")
-                            print("1 - Sell a house")
-                            print("2 - Sell a hotel")
-                            print("3 - Declare bankruptcy")
-                            choice = input("Select option: ")
-                            # Sell house
-                            if choice == "1":
-                                sell_house(player_id, position, players)
-                            # Sell hotel
-                            elif choice == "2":
-                                sell_hotel(player_id, position, players)
-                            elif choice == "3":
-                                handle_bankruptcy(players, player_id, creditor_id=None)
-                                break
-                            else:
-                                print("Invalid choice.")
+                        # print("Not enough money after 3 turns")
+                        # while player["money"] < 50:
+                        #     print("You need to sell houses/hotels to get enough money.")
+                        #     print("1 - Sell a house")
+                        #     print("2 - Sell a hotel")
+                        #     print("3 - Declare bankruptcy")
+                        #     choice = input("Select option: ")
+                        #     # Sell house
+                        #     if choice == "1":
+                        #         sell_house(player_id, position, players)
+                        #     # Sell hotel
+                        #     elif choice == "2":
+                        #         sell_hotel(player_id, position, players)
+                        #     elif choice == "3":
+                        mn.handle_bankruptcy(player_id,players,50)
                             # Check again if the player has enough money
-                            if player["money"] >= 50:
-                                break  # If the player has enough money, exit the loop
-
-                    player["money"] -= 50
-                    player["in_jail"] = False
-                    player["jail_turns"] = 0
-                    print("3 turns passed, paid 50$ and got out")
-                    break
+                        #if player["money"] >= 50:
+                        #        break  # If the player has enough money, exit the loop
+                    else:
+                        player["money"] -= 50
+                        player["in_jail"].clear()
+                        player["jail_turns"] = 0
+                        print("3 turns passed, paid 50$ and got out")
+                        return True
+                else:
+                    return False

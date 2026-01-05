@@ -80,7 +80,7 @@ def random_chance_card(player, players):
     elif random_card == "pay 15$ to the bank":
         players[player]['money'] -= 15
     elif random_card == "go directory to jail":
-        players[player]['in_jail'] = True
+        return 'jail'
     elif random_card == "move to GO and get 200$":
         players[player]['position'] = 1
         return 'GO'
