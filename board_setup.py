@@ -239,7 +239,7 @@ monopoly_data = {
         "rent": [22, 110, 330, 800, 975, 1150],
         "house_cost": 150,
         "hotel_cost": 150
-        , "owner": ""
+        , "owner":  ""
 
     },
     "28": {
@@ -341,14 +341,12 @@ monopoly_data = {
         "house_cost": 200,
         "hotel_cost": 200
         , "owner": ""
-
     },
     "39": {
         "name": "Luxury Tax",
         "type": "tax",
         "amount": 100
         , "owner": "gov"
-
     },
     "40": {
         "name": "Boardwalk",
@@ -359,9 +357,10 @@ monopoly_data = {
         "house_cost": 200,
         "hotel_cost": 200
         , "owner": ""
-
     }
 }
+from mahdinewdebug import load_game
+load_game()
 board = [None] * 40
 for key in monopoly_data:
     pos = int(key) - 1
