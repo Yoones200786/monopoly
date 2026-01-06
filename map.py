@@ -5,7 +5,7 @@ for i in range(1, 41):
     Dict[f'lst{i}']=['  ','  ','  ','  ']
     Str=' '.join(['  ', '  ', '  ', '  '])
 
-def append_player(player,position,):
+def append_player(player,position):
     index = {'p1': 0, 'p2': 1, 'p3': 2, 'p4': 3}[player]
     Dict[f'lst{position}'][index]=player
     dict_square[player] = position
