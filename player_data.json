@@ -3,8 +3,8 @@
     "players": {
         "1": {
             "username": "player1",
-            "position": 20,
-            "money": 1,
+            "position": 1,
+            "money": 1000,
             "properties": [],
             "in_jail": [],
             "jail_turns": 0,
@@ -30,7 +30,7 @@
         },
         "4": {
             "username": "player4",
-            "position": 34,
+            "position": 1,
             "money": 1000,
             "properties": [],
             "in_jail": [],

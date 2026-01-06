@@ -23,7 +23,7 @@ def showing_option(player_num, square_num, players, code=True, debt=False):
         code = False
     orders = ['next']
     order_list = ['next -> move to next player']
-    print(players[player_num]['jail_turns'])
+
     if debt or (players[player_num]['jail_turns'] == 2 and not already_tried_getting_out):
         order_list.remove('next -> move to next player')
     if players[player_num]['in_jail'] and not already_tried_getting_out and not debt:
@@ -86,7 +86,6 @@ def menu(player_num, square_num, players, rent, code=True, debt=False, auto_next
         remove_player(player_num)
 #        player_num = next_person_move(player_num)
 #        return player_num
-        print(players_square,'1')
         return
     while input_is_not_valid:
         next_order = input(str_orders)
@@ -210,8 +209,15 @@ def menu(player_num, square_num, players, rent, code=True, debt=False, auto_next
         return_already_tried_getting_out()
         if result:
             if result == 'cancel':
-                already_tried_getting_out.remove('/')
                 return menu(player_num, square_num, players, rent, code, debt)
+            elif result == 'handle_bankruptcy':
+                Result = handle_bankruptcy(player_num, players, 50, square_num)
+                if not Result:
+                    player_num = next_person_move(player_num)
+                    return player_num
+                else:
+                    return player_num
+
             else:
                 lst_just_got_out_of_jail.append('/')
                 if type(result) == tuple:
@@ -220,8 +226,6 @@ def menu(player_num, square_num, players, rent, code=True, debt=False, auto_next
                 else:
                     return player_num
         else:
-            print(players)
-            print(players_square)
             if player_num not in players:
                 player_num = next_person_move(player_num)
                 pre_player_num = player_num
@@ -243,8 +247,8 @@ def new_turn(player_num, square_num, dice_sum=0):
         return player_num, square_num, 0
     tas1 = random.randrange(1, 7)
     tas2 = random.randrange(1, 7)
-    tas1 = 6
-    tas2 = 5
+    #tas1 = 1
+    #tas2 = 1
     if dices_after_prison:
         tas1 = dices_after_prison.pop()
         tas2 = 0
@@ -276,7 +280,6 @@ def next_person_move(player_num):  #  finds out who's turn is next
 
 def remove_player(player_num):
     players_square.pop(player_num)  # if player does not  have money it gets eliminated
-    print('poped succesfully')
     print(players_square)
     players.pop(player_num)
     if len(players) == 1:
@@ -310,13 +313,11 @@ def load_game():
 
 if __name__ == "__main__":
     while True:
+        state['current_turn'] = player_num
         already_tried_getting_out.clear()
         print(colorama.Fore.GREEN + colorama.Style.BRIGHT + "---new turn starts!---" + colorama.Style.RESET_ALL)
-        op = input('do you want to do anything befor rolling dice?(yes/or just enter to cancel)')
-        players_square = dict()
-        for i, j in players.items():
-            players_square[i] = j['position']
-
+        print(f"your turn player {player_num}")
+        op = input('do you want to save or manage your properties before rolling dice?(save/manage/or just enter to cancel)')
         square_num = players_square[player_num]
         if op == 'yes':
             lst_picked_same.append('/')
@@ -324,7 +325,6 @@ if __name__ == "__main__":
             lst_picked_same.remove('/')
         pre_square_num = square_num
         player_num, square_num, dice_sum = new_turn(player_num, square_num)
-        state['current_turn'] = player_num
         if square_num == 31:
             go_to_jail(player_num)
             square_num = 11
@@ -393,9 +393,13 @@ if __name__ == "__main__":
                     players[next_player]['money'] += 150
             elif Random == 'skip':
                 skip = True
+                should_skip.append('/')
         if len(players[player_num]['in_jail']) == 1: # if its first time player enters jail, his turn ends and he can't do anything
             lst_picked_same.clear()
             print("you just entered jail and you can't do any thing!")
+            if should_skip:
+                player_num = next_person_move(player_num)
+                should_skip.clear()
             player_num = next_person_move(player_num)
             continue
         if player_num in players:
@@ -414,7 +418,6 @@ if __name__ == "__main__":
                     player_num = next_person_move(player_num)
                     should_skip.clear()
                 player_num = menu(player_num, square_num, players, rent,  True, False, False)
-                print(player_num)
             else:
                 player_num = next_person_move(player_num)
         else:

@@ -59,14 +59,21 @@ chance_card = ["get out of jail free", "go directory to jail", "pay 15$ to the b
                , "get 150$ from the bank", "pay 20$ to the bank",
                "give the next player 80$", "Give the next person $50", "pay 100$ to the bank", "skip next player", 'move to board walk']
 
-community_chest = ["receive 200$ form bank", "give the next player 100$","sell one of your houses", "move to free parking",
+community_chest = ["receive 200$ form bank",
+                   "give the next player 100$",
+                   "sell one of your houses",
+                   "move to free parking",
                    "receive 50$ form bank",
-                   "give the next player 150$","pick another card", "skip next player"]
+                   "give the next player 150$",
+                   "pick another card",
+                   "skip next player"]
+
+
+community_chest = ["skip next player"]
 
 cards = {"p1": [], "p2": [], "p3": [], "p4": []}
 card_keys = list(cards.keys())
 card_values = list(cards.values())
-community_chest = ["give the next player 100$"]
 
 def random_chance_card(player, players):
     random_card = random.choice(chance_card)
@@ -120,7 +127,7 @@ def random_community_chest(player, players):
     #elif random_card == "get 50$ from previous player":
     elif random_card == "pick another card":
         print('pick another card!')
-        random_community_chest(player, players)
+        return random_community_chest(player, players)
     elif random_card == "give the next player 100$":
         return 'cnext100'
     elif random_card == "move to free parking":

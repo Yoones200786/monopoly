@@ -1,21 +1,10 @@
 # Send player to jail
 import random
-import mahdinewdebug as mn
-import golami as gm
-
-def send_to_jail(player):
-    player["position"] = 11
-    player["in_jail"] = True
-    player["jail_turns"] = 0
-    print(f'{player["username"]} went to jail')
-
+import mahdinewdebugforjail as mn
 # Manage jail options
-
-
 def handle_jail(players, player_id):
     player = players[player_id]
     print(f'\n{player["username"]} is in jail')
-
     while True:
         print("\nChoose an option:")
         print("1 - Pay 50$")
@@ -30,7 +19,6 @@ def handle_jail(players, player_id):
         except ValueError:
             print("Please enter a number.")
             continue
-
         # Pay 50$ to leave
         if choice == 1:
             if player["money"] < 50:
@@ -41,7 +29,6 @@ def handle_jail(players, player_id):
             player["jail_turns"] = 0
             print("You paid 50$ and got out of jail! you will continue your turn.")
             return True
-
         # Use get out of jail card
         elif choice == 2:
             if player["get_out_of_jail_cards"] != 1:
@@ -52,13 +39,10 @@ def handle_jail(players, player_id):
             player["jail_turns"] = 0
             print("You used a card and got out of jail! you will continue your turn.")
             return True
-
         # Try for a double
         elif choice == 3:
             d1 = random.randint(1, 6)
             d2 = random.randint(1, 6)
-            d1 = 2
-            d2 = 1
             print(f"Dice rolled: {d1}, {d2}")
             if d1 == d2:
                 player["in_jail"].clear()
@@ -71,31 +55,7 @@ def handle_jail(players, player_id):
                 # After 3 turns, pay or sell
                 if player["jail_turns"] >= 3:
                     if player["money"] < 50:
-                        # print("Not enough money after 3 turns")
-                        # while player["money"] < 50:
-                        #     print("You need to sell houses/hotels to get enough money.")
-                        #     print("1 - Sell a house")
-                        #     print("2 - Sell a hotel")
-                        #     print("3 - Declare bankruptcy")
-                        #     choice = input("Select option: ")
-                        #     # Sell house
-                        #     if choice == "1":
-                        #         sell_house(player_id, position, players)
-                        #     # Sell hotel
-                        #     elif choice == "2":
-                        #         sell_hotel(player_id, position, players)
-                        #     elif choice == "3":
-                        result_handle_bankruptcy = mn.handle_bankruptcy(player_id, players, 50, 11)
-                        if result_handle_bankruptcy:
-                            player["in_jail"].clear()
-                            player["jail_turns"] = 0
-                            print("You paid 50$ and got out of jail! you will continue your turn.")
-                            return True
-                        else:
-                            return False
-                        # Check again if the player has enough money
-                        #if player["money"] >= 50:
-                        #        break  # If the player has enough money, exit the loop
+                        return 'handle_bankruptcy'
                     else:
                         player["money"] -= 50
                         player["in_jail"].clear()
