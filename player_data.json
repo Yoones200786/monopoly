@@ -11,7 +11,7 @@
             "get_out_of_jail_cards": 0
         },
         "2": {
-            "username": "player2",
+            "username": "player1",
             "position": 1,
             "money": 1000,
             "properties": [],
@@ -37,5 +37,12 @@
             "jail_turns": 0,
             "get_out_of_jail_cards": 0
         }
+    },
+    "lst": {
+        "already_tried_getting_out": [],
+        "dices_after_prison": [],
+        "should_skip": [],
+        "lst_picked_same": [],
+        "lst_just_got_out_of_jail": []
     }
 }

@@ -69,7 +69,6 @@ community_chest = ["receive 200$ form bank",
                    "skip next player"]
 
 
-community_chest = ["skip next player"]
 
 cards = {"p1": [], "p2": [], "p3": [], "p4": []}
 card_keys = list(cards.keys())
@@ -139,24 +138,6 @@ def random_community_chest(player, players):
     elif random_card == "skip next player":
         return 'skip'
 
-def jail():
-    if player_num == 31:
-        print(f'player{player_num} went to jail')
-        player_num = 11
-
-
-def free_jail(i):
-    if "get out of jail free" in card_values[i - 1]:
-        player_num = 11
-
-
-def in_jail():
-    print("choose an option:")
-    print(f"1-payment of 50$")
-    print(f"2-use card")
-    print(f"3-try for a double")
-    jail_choices = int(input("selected option:"))
-    return jail_choices
 
 
 save_game()

@@ -1,7 +1,7 @@
 [
     {
         "id": 1,
-        "username": "amirfomic",
+        "username": "mahdi1",
         "position": 0,
         "in_jail": false,
         "jail_turns": 0,
@@ -10,7 +10,7 @@
     },
     {
         "id": 2,
-        "username": "amirfomic2",
+        "username": "mahdi2",
         "position": 0,
         "in_jail": false,
         "jail_turns": 0,
@@ -19,7 +19,7 @@
     },
     {
         "id": 3,
-        "username": "amirfomic4",
+        "username": "mahdi3",
         "position": 0,
         "in_jail": false,
         "jail_turns": 0,
@@ -28,7 +28,7 @@
     },
     {
         "id": 4,
-        "username": "amirfomic5",
+        "username": "mahdi4",
         "position": 0,
         "in_jail": false,
         "jail_turns": 0,

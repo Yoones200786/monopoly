@@ -1,11 +1,18 @@
 import colorama
-colorama.init()
 import random
 import golami as gm
 import yonesjail as yj
 from board_setup import monopoly_data
 from load_save import state
 from sh import random_chance_card, random_community_chest
+import map
+import json
+from farahani import mainmenu
+mainmenu()
+
+
+
+colorama.init()
 already_tried_getting_out = []
 dices_after_prison = []
 should_skip = []
@@ -16,6 +23,13 @@ players = state["players"]
 for i in players:
     players_square[int(i)] = players[i]['position']
 player_num = state['current_turn']
+lst = state["lst"]
+n_lst = list(lst.values())
+already_tried_getting_out = n_lst[0]
+dices_after_prison = n_lst[1]
+should_skip = n_lst[2]
+lst_picked_same = n_lst[3]
+lst_just_got_out_of_jail = n_lst[4]
 
 
 def showing_option(player_num, square_num, players, code=True, debt=False):
@@ -23,7 +37,6 @@ def showing_option(player_num, square_num, players, code=True, debt=False):
         code = False
     orders = ['next']
     order_list = ['next -> move to next player']
-
     if debt or (players[player_num]['jail_turns'] == 2 and not already_tried_getting_out):
         order_list.remove('next -> move to next player')
     if players[player_num]['in_jail'] and not already_tried_getting_out and not debt:
@@ -60,10 +73,6 @@ def showing_option(player_num, square_num, players, code=True, debt=False):
     return str_orders, orders
 
 
-def return_already_tried_getting_out():
-    return already_tried_getting_out
-
-
 def menu(player_num, square_num, players, rent, code=True, debt=False, auto_next=False,):
     if auto_next and not debt:
         return
@@ -83,9 +92,8 @@ def menu(player_num, square_num, players, rent, code=True, debt=False, auto_next
             players[gm.board[square_num - 1]['owner']]['money'] += players[player_num]['money']
         elif gm.board[square_num - 1]['type'] == "community_chest" or gm.board[square_num - 1]['type'] == "chance":
             players[future_player]['money'] += players[player_num]['money']
+        map.lose_player(f'p{player_num}', square_num)
         remove_player(player_num)
-#        player_num = next_person_move(player_num)
-#        return player_num
         return
     while input_is_not_valid:
         next_order = input(str_orders)
@@ -206,7 +214,6 @@ def menu(player_num, square_num, players, rent, code=True, debt=False, auto_next
     if next_order == 'jail':
         already_tried_getting_out.append('/')
         result = yj.handle_jail(players, player_num)
-        return_already_tried_getting_out()
         if result:
             if result == 'cancel':
                 return menu(player_num, square_num, players, rent, code, debt)
@@ -248,7 +255,7 @@ def new_turn(player_num, square_num, dice_sum=0):
     tas1 = random.randrange(1, 7)
     tas2 = random.randrange(1, 7)
     #tas1 = 1
-    #tas2 = 1
+    #tas2 = 0
     if dices_after_prison:
         tas1 = dices_after_prison.pop()
         tas2 = 0
@@ -280,11 +287,9 @@ def next_person_move(player_num):  #  finds out who's turn is next
 
 def remove_player(player_num):
     players_square.pop(player_num)  # if player does not  have money it gets eliminated
-    print(players_square)
     players.pop(player_num)
     if len(players) == 1:
         print('game over')
-
 
 def handle_bankruptcy(player_num, players, rent, square_num):
     while players[player_num]['money'] < rent:
@@ -311,18 +316,48 @@ def load_game():
     return monopoly_data
 
 
+def save_game():
+    name_of_save = input('enter the name of your current game you can load it later with this name:')
+    try:
+        with open('players.json', 'r') as f:
+            all_data = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+            all_data = dict()
+    for i in all_data:
+        if name_of_save == i:
+            print('this name is already chosen please try another name ')
+            save_game()
+            return
+    with open('players.json', 'w') as f:
+        json.dumps(all_data, indent=4)
+    all_data[name_of_save] = state
+
+
 if __name__ == "__main__":
+    for i in players:
+        map.append_player(f'p{i}', players[i]['position'])
+    # map.append_player(player="p1",position=1)
+    # map.append_player(player="p2",position=1)
+    # map.append_player(player="p3",position=1)
+    # map.append_player(player="p4",position=1)
+
+
+
     while True:
         state['current_turn'] = player_num
         already_tried_getting_out.clear()
         print(colorama.Fore.GREEN + colorama.Style.BRIGHT + "---new turn starts!---" + colorama.Style.RESET_ALL)
         print(f"your turn player {player_num}")
-        op = input('do you want to save or manage your properties before rolling dice?(save/manage/or just enter to cancel)')
+        op = input('do you want to save and exit or exit without saveing manage your properties before rolling dice?(yes/save/exit/or just enter to cancel)')
         square_num = players_square[player_num]
         if op == 'yes':
             lst_picked_same.append('/')
             menu(player_num, square_num, players, 0, False, False)
             lst_picked_same.remove('/')
+        elif op == 'save':
+            save_game()
+            break
+        square_num = players_square[player_num]
         pre_square_num = square_num
         player_num, square_num, dice_sum = new_turn(player_num, square_num)
         if square_num == 31:
@@ -335,6 +370,7 @@ if __name__ == "__main__":
         rent = gm.calculate_rent(square_num, player_num, dice_sum)
         future_player = next_person_move(player_num)
         print(f'player {player_num} in square {square_num}')
+        map.move_player(player=f'p{player_num}',position=square_num)
         print(f'you have to pay {rent}$ of rent')
         skip = False
         got_money = False
@@ -399,8 +435,9 @@ if __name__ == "__main__":
             print("you just entered jail and you can't do any thing!")
             if should_skip:
                 player_num = next_person_move(player_num)
-                should_skip.clear()
+                should_skip.claer()
             player_num = next_person_move(player_num)
+            map.move_player(player=f'p{player_num}', position=square_num)
             continue
         if player_num in players:
             if players[player_num]['money'] < rent:

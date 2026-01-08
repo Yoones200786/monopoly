@@ -1,0 +1,27 @@
+{
+    "7b2eff61-eff4-462d-ab3c-10d40b129a76": {
+        "username": "mahdi1",
+        "email": "mahdi1@gamil.com",
+        "password": "$2b$12$S8IVfwJNawpTEsCmBIiuLuEU2I7EIpdzFhF3Sw4mrHmN56UTWFrY."
+    },
+    "e0e02f5b-4cef-43c3-8408-f0c8ddbee02a": {
+        "username": "mahdi2",
+        "email": "mahdi2@gmail.com",
+        "password": "$2b$12$MLA6xRq7v7fX/Op3A9R0jeoi8yym9rKhO4FIeEj80IymngYShe6tG"
+    },
+    "939a1f40-fdec-4589-a4e8-d480a759327d": {
+        "username": "mahdi3",
+        "email": "mahdi3@gamil.com",
+        "password": "$2b$12$8TavKLlf58G99gjwiKN/O.Op6vFw2rFXa/tUHWtoEJn4m7veHWgFe"
+    },
+    "017c6fe9-1b72-4832-886f-e0dad7d58b14": {
+        "username": "mahdi4",
+        "email": "mahdi4@gmail.com",
+        "password": "$2b$12$Ob0CxgnQyns5op2GZWyrxOrbKd0ChljmFTiaNYhsjcu/x6p4VXyx2"
+    },
+    "265dc3d4-f33c-4346-899c-9bbdf14eaa27": {
+        "username": "mahdi5",
+        "email": "mahdi5@gmail.com",
+        "password": "$2b$12$NoKuu5T2oZ7ujoBZRSER/.AYxWZGEdoG//vBA6xEneD1zv7l5srwS"
+    }
+}
