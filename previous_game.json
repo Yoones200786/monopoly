@@ -1,0 +1,112 @@
+{
+    "players": {
+        "1": {
+            "username": "mahdi1",
+            "position": 17,
+            "money": 576,
+            "properties": [
+                {
+                    "square 7": [
+                        "light_blue",
+                        0,
+                        0,
+                        false
+                    ]
+                },
+                {
+                    "square 13": [
+                        "utility"
+                    ]
+                },
+                {
+                    "square 17": [
+                        "orange",
+                        0,
+                        0,
+                        false
+                    ]
+                }
+            ],
+            "in_jail": [],
+            "jail_turns": 0,
+            "get_out_of_jail_cards": 0
+        },
+        "2": {
+            "username": "mahdi2",
+            "position": 30,
+            "money": 114,
+            "properties": [
+                {
+                    "square 15": [
+                        "pink",
+                        0,
+                        0,
+                        false
+                    ]
+                },
+                {
+                    "square 19": [
+                        "orange",
+                        0,
+                        0,
+                        false
+                    ]
+                },
+                {
+                    "square 27": [
+                        "yellow",
+                        0,
+                        0,
+                        false
+                    ]
+                },
+                {
+                    "square 30": [
+                        "yellow",
+                        0,
+                        0,
+                        false
+                    ]
+                }
+            ],
+            "in_jail": [],
+            "jail_turns": 0,
+            "get_out_of_jail_cards": 0
+        },
+        "3": {
+            "username": "mahdi3",
+            "position": 8,
+            "money": 1000,
+            "properties": [],
+            "in_jail": [],
+            "jail_turns": 0,
+            "get_out_of_jail_cards": 1
+        },
+        "4": {
+            "username": "mahdi4",
+            "position": 12,
+            "money": 860,
+            "properties": [
+                {
+                    "square 12": [
+                        "pink",
+                        0,
+                        0,
+                        false
+                    ]
+                }
+            ],
+            "in_jail": [],
+            "jail_turns": 0,
+            "get_out_of_jail_cards": 0
+        }
+    },
+    "current_turn": 3,
+    "lst": {
+        "already_tried_getting_out": [],
+        "dices_after_prison": [],
+        "should_skip": [],
+        "lst_picked_same": [],
+        "lst_just_got_out_of_jail": []
+    }
+}

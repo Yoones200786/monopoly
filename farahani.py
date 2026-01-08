@@ -13,9 +13,9 @@ def mainmenu():
     print("4. Exit")
     choice = input ("Enter your choice (1-4):")
     if choice =="1":
-        signupmenu()
+        return signupmenu()
     elif choice =="2":
-        loadgame()
+        return loadgame()
     elif choice =="3":
         def informations(id,username,position=0,in_jail=False,jail_turns=0,money=1500,properties=None):
             if properties is None:
@@ -37,22 +37,24 @@ def mainmenu():
         p4 = informations(4, username_dict["4"], position=15, in_jail=False, jail_turns=0, money=1800)
         players=[p1,p2,p3,p4]
         leaderboard(players)
-        mainmenu()
+        return mainmenu()
     elif choice == "4":
         print("Exiting... Goodbye!")
         exit()
     else:
         print("Oops! Please enter a valid number (1-4).\n")
-        mainmenu()
+        return mainmenu()
+
+
 def signupmenu():
     print("1. Signup")
     print("2. Login")
     print("3. Exit")
-    choice = input ("Enter your choice (1-3):")
+    choice = input("Enter your choice (1-3):")
     if choice == "1":
         username = input("Enter a username:")
         while usernameisnew(username) == False:
-            print ("username is already taken, please try again!")
+            print("username is already taken, please try again!")
             username = input("Enter a username:")
         email = input("Enter an email:")
         while emailisvalid(email) == False or emailisnew(email) == False:
@@ -79,7 +81,8 @@ def signupmenu():
         users.update(user_data)
         with open("sign-up.json", "w") as f:
             json.dump(users, f, indent=4)
-        mainmenu()
+        return mainmenu()
+
     elif choice == "2":
         players = {}
         player_num = 1
@@ -102,16 +105,17 @@ def signupmenu():
                 print("2. Exit to signup menu")
                 choice2 = input("Enter your choice (1-2): ")
                 if choice2 == "2":
-                    mainmenu()  
-        
+                    return mainmenu()
+
         with open("current-game.json", "w") as f:
             json.dump(players, f, indent=4)
-        newgame()
+        print('i shall go to newgame')
+        return newgame()
     elif choice == "3":
-        mainmenu()
+        return mainmenu()
     else:
         print ("Oops! Please enter a valid number (1-3).\n")
-        signupmenu()
+        return signupmenu()
 def emailisvalid(email):
     email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     if re.match(email_pattern, email):
@@ -154,9 +158,11 @@ def check_login(username,password):
             return bcrypt.checkpw(password.encode("utf-8"), u["password"].encode("utf-8"))
     return False
 def newgame():
-    print ("The Functuion is not ready yet!")
+    print('im here')
+    return 'new'
 def loadgame():
-    print ("The Functuion is not ready yet!")
+    return 'load'
+
 def leaderboard2():
     def informations(id,username,position=0,in_jail=False,jail_turns=0,money=1500,properties=None):
         if properties is None:
@@ -179,6 +185,3 @@ def leaderboard2():
             jail_situation = "in jail" if informarion["in_jail"] else "free"
             all_properties = ", ".join(informarion["properties"]) if informarion["properties"] else "-"
             print(f"{informarion['id']:<4} {informarion['username']:<10} {informarion['position']:<10} {jail_situation:<16} {informarion['jail_turns']:<12} {informarion['money']:<8} {all_properties}")
-
-
-

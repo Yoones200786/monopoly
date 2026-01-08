@@ -1,15 +1,454 @@
+monopoly_data = {
+    "1": {
+        "name": "GO",
+        "type": "special",
+        "action": "collect",
+        "amount": 200
+        ,"owner":"gov"
+    },
+    "2": {
+        "name": "Mediterranean Avenue",
+        "type": "property",
+        "color": "brown",
+        "buy_price": 60,
+        "rent": [2, 10, 30, 90, 160, 250],
+        "house_cost": 50,
+        "hotel_cost": 50
+        ,"owner":""
+    },
+    "3": {
+        "name": "Community Chest 1",
+        "type": "community_chest"
+        , "owner": "gov"
+
+    },
+    "4": {
+        "name": "Baltic Avenue",
+        "type": "property",
+        "color": "brown",
+        "buy_price": 60,
+        "rent": [4, 20, 60, 180, 320, 450],
+        "house_cost": 50,
+        "hotel_cost": 50,
+        "owner":""
+
+    },
+    "5": {
+        "name": "Income Tax",
+        "type": "tax",
+        "amount": 200
+        , "owner": "gov"
+
+    },
+    "6": {
+        "name": "Reading Railroad",
+        "type": "railroad",
+        "buy_price": 200,
+        "rent": [25, 50, 100, 200]
+        , "owner": ""
+
+    },
+    "7": {
+        "name": "Oriental Avenue",
+        "type": "property",
+        "color": "light_blue",
+        "buy_price": 100,
+        "rent": [6, 30, 90, 270, 400, 550],
+        "house_cost": 50,
+        "hotel_cost": 50
+        , "owner": ""
+},
+    "8": {
+        "name": "Chance 1",
+        "type": "chance"
+        , "owner": "gov"
+
+    },
+    "9": {
+        "name": "Vermont Avenue",
+        "type": "property",
+        "color": "light_blue",
+        "buy_price": 100,
+        "rent": [6, 30, 90, 270, 400, 550],
+        "house_cost": 50,
+        "hotel_cost": 50
+        , "owner": ""
+    },
+
+    "10": {
+        "name": "Connecticut Avenue",
+        "type": "property",
+        "color": "light_blue",
+        "buy_price": 120,
+        "rent": [8, 40, 100, 300, 450, 600],
+        "house_cost": 50,
+        "hotel_cost": 50
+        , "owner": ""},
+    "11": {
+        "name": "Jail",
+        "type": "special",
+        "action": "just_visiting"
+        , "owner": "gov"
+
+    },
+    "12": {
+        "name": "St. Charles Place",
+        "type": "property",
+        "color": "pink",
+        "buy_price": 140,
+        "rent": [10, 50, 150, 450, 625, 750],
+        "house_cost": 100,
+        "hotel_cost": 100
+        , "owner": ""
+
+    },
+    "13": {
+        "name": "Electric Company",
+        "type": "utility",
+        "buy_price": 150,
+        "rent_multiplier": [4, 10]
+        , "owner": ""
+
+    },
+    "14": {
+        "name": "States Avenue",
+        "type": "property",
+        "color": "pink",
+        "buy_price": 140,
+        "rent": [10, 50, 150, 450, 625, 750],
+        "house_cost": 100,
+        "hotel_cost": 100
+        , "owner": ""
+
+    },
+    "15": {
+        "name": "Virginia Avenue",
+        "type": "property",
+        "color": "pink",
+        "buy_price": 160,
+        "rent": [12, 60, 180, 500, 700, 900],
+        "house_cost": 100,
+        "hotel_cost": 100
+        , "owner": ""
+
+    },
+    "16": {
+        "name": "Pennsylvania Railroad",
+        "type": "railroad",
+        "buy_price": 200,
+        "rent": [25, 50, 100, 200]
+        , "owner": ""
+
+    },
+    "17": {
+        "name": "St. James Place",
+        "type": "property",
+        "color": "orange",
+        "buy_price": 180,
+        "rent": [14, 70, 200, 550, 750, 950],
+        "house_cost": 100,
+        "hotel_cost": 100
+        , "owner": ""
+
+    },
+    "18": {
+        "name": "Community Chest 2",
+        "type": "community_chest"
+        , "owner": "gov"
+
+    },
+    "19": {
+        "name": "Tennessee Avenue",
+        "type": "property",
+        "color": "orange",
+        "buy_price": 180,
+        "rent": [14, 70, 200, 550, 750, 950],
+        "house_cost": 100,
+        "hotel_cost": 100
+        , "owner": ""
+
+    },
+    "20": {
+        "name": "New York Avenue",
+        "type": "property",
+        "color": "orange",
+        "buy_price": 200,
+        "rent": [16, 80, 220, 600, 800, 1000],
+        "house_cost": 100,
+        "hotel_cost": 100
+        , "owner": ""
+
+    },
+    "21": {
+        "name": "Free Parking",
+        "type": "special"
+        , "owner": "gov"
+
+    },
+    "22": {
+        "name": "Kentucky Avenue",
+        "type": "property",
+        "color": "red",
+        "buy_price": 220,
+        "rent": [18, 90, 250, 700, 875, 1050],
+        "house_cost": 150,
+        "hotel_cost": 150
+        , "owner": ""
+
+    },
+    "23": {
+        "name": "Chance 2",
+        "type": "chance"
+        , "owner": "gov"
+
+    },
+    "24": {
+        "name": "Indiana Avenue",
+        "type": "property",
+        "color": "red",
+        "buy_price": 220,"rent": [18, 90, 250, 700, 875, 1050],
+        "house_cost": 150,
+        "hotel_cost": 150
+        , "owner": ""
+
+    },
+    "25": {
+        "name": "Illinois Avenue",
+        "type": "property",
+        "color": "red",
+        "buy_price": 240,
+        "rent": [20, 100, 300, 750, 925, 1100],
+        "house_cost": 150,
+        "hotel_cost": 150
+        , "owner": ""
+
+    },
+    "26": {
+        "name": "B&O Railroad",
+        "type": "railroad",
+        "buy_price": 200,
+        "rent": [25, 50, 100, 200]
+        , "owner": ""
+
+    },
+    "27": {
+        "name": "Atlantic Avenue",
+        "type": "property",
+        "color": "yellow",
+        "buy_price": 260,
+        "rent": [22, 110, 330, 800, 975, 1150],
+        "house_cost": 150,
+        "hotel_cost": 150
+        , "owner":  ""
+
+    },
+    "28": {
+        "name": "Ventnor Avenue",
+        "type": "property",
+        "color": "yellow",
+        "buy_price": 260,
+        "rent": [22, 110, 330, 800, 975, 1150],
+        "house_cost": 150,
+        "hotel_cost": 150
+        , "owner": ""
+
+    },
+    "29": {
+        "name": "Water Works",
+        "type": "utility",
+        "buy_price": 150,
+        "rent_multiplier": [4, 10]
+        , "owner": ""
+
+    },
+    "30": {
+        "name": "Marvin Gardens",
+        "type": "property",
+        "color": "yellow",
+        "buy_price": 280,
+        "rent": [24, 120, 360, 850, 1025, 1200],
+        "house_cost": 150,
+        "hotel_cost": 150
+        , "owner": ""
+
+    },
+    "31": {
+        "name": "Go to Jail",
+        "type": "special",
+        "action": "goto_jail"
+        , "owner": "gov"
+
+    },
+    "32": {
+        "name": "Pacific Avenue",
+        "type": "property",
+        "color": "green",
+        "buy_price": 300,
+        "rent": [26, 130, 390, 900, 1100, 1275],
+        "house_cost": 200,
+        "hotel_cost": 200
+        , "owner": ""
+
+    },
+    "33": {
+        "name": "North Carolina Avenue",
+        "type": "property",
+        "color": "green",
+        "buy_price": 300,
+        "rent": [26, 130, 390, 900, 1100, 1275],
+        "house_cost": 200,
+        "hotel_cost": 200
+        , "owner": ""
+
+    },
+    "34": {
+        "name": "Community Chest 3",
+        "type": "community_chest"
+        , "owner": "gov"
+
+    },
+    "35": {
+        "name": "Pennsylvania Avenue",
+        "type": "property",
+        "color": "green",
+        "buy_price": 320,
+        "rent": [28, 150, 450, 1000, 1200, 1400],
+        "house_cost": 200,
+        "hotel_cost": 200
+        , "owner": ""
+
+    },
+    "36": {
+        "name": "Short Line",
+        "type": "railroad",
+        "buy_price": 200,
+        "rent": [25, 50, 100, 200]
+        , "owner": ""
+
+    },
+    "37": {
+        "name": "Chance 3",
+        "type": "chance"
+        , "owner": "gov"
+
+    },
+    "38": {
+        "name": "Park Place",
+        "type": "property",
+        "color": "dark_blue",
+        "buy_price": 350,
+        "rent": [35, 175, 500, 1100, 1300, 1500],
+        "house_cost": 200,
+        "hotel_cost": 200
+        , "owner": ""
+    },
+    "39": {
+        "name": "Luxury Tax",
+        "type": "tax",
+        "amount": 100
+        , "owner": "gov"
+    },
+    "40": {
+        "name": "Boardwalk",
+        "type": "property",
+        "color": "dark_blue",
+        "buy_price": 400,
+        "rent": [50, 200, 600, 1400, 1700, 2000],
+        "house_cost": 200,
+        "hotel_cost": 200
+        , "owner": ""
+    }
+}
 import colorama
 import random
-import golami as gm
-import yonesjail as yj
-from board_setup import monopoly_data
 from load_save import state
-from sh import random_chance_card, random_community_chest
 import map
 import json
+import golami as gm
+import yonesjail as yj
+from sh import random_chance_card, random_community_chest
 from farahani import mainmenu
-mainmenu()
 
+if __name__ == '__main__':
+    re = mainmenu()
+    if re == 'new':
+        print('i go in if statement')
+        state = {
+            "current_turn": 1,
+            "players": {
+                1: {
+                    "username": "player1",
+                    "position": 1,
+                    "money": 1000,
+                    "properties": [],
+                    "in_jail": [],
+                    "jail_turns": 0,
+                    "get_out_of_jail_cards": 0
+
+                },
+
+                2: {
+                    "username": "player1",
+                    "position": 1,
+                    "money": 1000,
+                    "properties": [],
+                    "in_jail": [],
+                    "jail_turns": 0,
+                    "get_out_of_jail_cards": 0 },
+
+
+
+                    3: {
+                    "username": "player3",
+                    "position": 1,
+                    "money": 1000,
+                    "properties": [],
+                    "in_jail": [],
+                    "jail_turns": 0,
+                    "get_out_of_jail_cards": 0
+                },
+                4: {
+                    "username": "player4",
+                    "position": 1,
+                    "money": 1000,
+                    "properties": [],
+                    "in_jail": [],
+                    "jail_turns": 0,
+                    "get_out_of_jail_cards": 0
+                }
+            }
+            , "lst":
+                {"already_tried_getting_out": [],
+                "dices_after_prison": [],
+                "should_skip": [],
+                "lst_picked_same": [],
+                "lst_just_got_out_of_jail": []
+                }
+            }
+        with open('current-game.json', 'r') as f:
+            players_list = json.load(f)
+        for i in range(1, 5):
+            state['players'][i]['username'] = players_list[str(i)]
+
+    elif re == 'load':
+        try:
+            print('hello there//////////////////////////////////////////////////////////////////////////////')
+            print('/////////////////////////////////////////////////////////////////')
+            state2 = dict()
+            state2['players'] = dict()
+            with open('previous_game.json', 'r') as f:
+                state = json.load(f)
+            player_dict = dict()
+            players = state["players"]
+            for i in players:
+                state2['players'][int(i)] = players[i]
+            current_turn = state["current_turn"]
+            state2["current_turn"] = current_turn
+            state2["lst"] = state["lst"]
+            state = state2
+            players = state["players"]
+        except (FileNotFoundError, json.JSONDecodeError):
+            print('no save game found! plz play new game')
 
 
 colorama.init()
@@ -30,6 +469,20 @@ dices_after_prison = n_lst[1]
 should_skip = n_lst[2]
 lst_picked_same = n_lst[3]
 lst_just_got_out_of_jail = n_lst[4]
+
+
+def load_game(players):
+    for player in players:
+        for dictionary in players[player]['properties']:
+            for pos in dictionary:
+                pos_property = pos.replace('square', '')
+                pos_property = pos_property.strip()
+                monopoly_data[pos_property]['owner'] = player
+                if monopoly_data[pos_property]['type'] == 'property':
+                    monopoly_data[pos_property]['houses'] = dictionary[f'square {pos_property}'][1]
+                    monopoly_data[pos_property]['hotel'] = dictionary[f'square {pos_property}'][2]
+                    monopoly_data[pos_property]['mortgaged'] = dictionary[f'square {pos_property}'][3]
+    return monopoly_data
 
 
 def showing_option(player_num, square_num, players, code=True, debt=False):
@@ -291,6 +744,7 @@ def remove_player(player_num):
     if len(players) == 1:
         print('game over')
 
+
 def handle_bankruptcy(player_num, players, rent, square_num):
     while players[player_num]['money'] < rent:
         print(colorama.Fore.RED + colorama.Style.BRIGHT+'WARNING!'+colorama.Style.RESET_ALL+f'you have debt in amount of {-players[player_num]['money'] + rent}$')
@@ -302,46 +756,15 @@ def handle_bankruptcy(player_num, players, rent, square_num):
     return True
 
 
-def load_game():
-    for player in players:
-        for dictionary in players[player]['properties']:
-            for pos in dictionary:
-                pos_property = pos.replace('square', '')
-                pos_property = pos_property.strip()
-                monopoly_data[pos_property]['owner'] = player
-                if monopoly_data[pos_property]['type'] == 'property':
-                    monopoly_data[pos_property]['houses'] = dictionary[f'square {pos_property}'][1]
-                    monopoly_data[pos_property]['hotel'] = dictionary[f'square {pos_property}'][2]
-                    monopoly_data[pos_property]['mortgaged'] = dictionary[f'square {pos_property}'][3]
-    return monopoly_data
-
-
 def save_game():
-    name_of_save = input('enter the name of your current game you can load it later with this name:')
-    try:
-        with open('players.json', 'r') as f:
-            all_data = json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError):
-            all_data = dict()
-    for i in all_data:
-        if name_of_save == i:
-            print('this name is already chosen please try another name ')
-            save_game()
-            return
-    with open('players.json', 'w') as f:
-        json.dumps(all_data, indent=4)
-    all_data[name_of_save] = state
+    with open('previous_game.json', 'w') as f:
+        json.dump(state, f, indent=4)
+    mainmenu()
 
 
 if __name__ == "__main__":
     for i in players:
         map.append_player(f'p{i}', players[i]['position'])
-    # map.append_player(player="p1",position=1)
-    # map.append_player(player="p2",position=1)
-    # map.append_player(player="p3",position=1)
-    # map.append_player(player="p4",position=1)
-
-
 
     while True:
         state['current_turn'] = player_num
@@ -356,6 +779,9 @@ if __name__ == "__main__":
             lst_picked_same.remove('/')
         elif op == 'save':
             save_game()
+            break
+        elif op == 'exit':
+            mainmenu()
             break
         square_num = players_square[player_num]
         pre_square_num = square_num

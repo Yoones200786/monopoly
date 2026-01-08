@@ -1,3 +1,5 @@
+from mahdinewdebugforjail import load_game
+"""
 monopoly_data = {
     "1": {
         "name": "GO",
@@ -359,12 +361,15 @@ monopoly_data = {
         , "owner": ""
     }
 }
-from mahdinewdebug import load_game
-load_game()
+"""
+monopoly_data = load_game(players)
 board = [None] * 40
 for key in monopoly_data:
     pos = int(key) - 1
     board[pos] = monopoly_data[key].copy()
+
+print(board)
+
 def initialize_board():
     for i in range(40):
         space = board[i]
