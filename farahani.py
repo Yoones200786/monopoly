@@ -161,6 +161,8 @@ def newgame():
     print('im here')
     return 'new'
 def loadgame():
+    with open('previous_game.json', 'r') as f:
+        state = json.load(f)
     return 'load'
 
 def leaderboard2():

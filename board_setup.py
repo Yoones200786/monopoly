@@ -362,7 +362,7 @@ monopoly_data = {
     }
 }
 """
-monopoly_data = load_game(players)
+monopoly_data = load_game()
 board = [None] * 40
 for key in monopoly_data:
     pos = int(key) - 1

@@ -372,7 +372,6 @@ from farahani import mainmenu
 if __name__ == '__main__':
     re = mainmenu()
     if re == 'new':
-        print('i go in if statement')
         state = {
             "current_turn": 1,
             "players": {
@@ -432,8 +431,6 @@ if __name__ == '__main__':
 
     elif re == 'load':
         try:
-            print('hello there//////////////////////////////////////////////////////////////////////////////')
-            print('/////////////////////////////////////////////////////////////////')
             state2 = dict()
             state2['players'] = dict()
             with open('previous_game.json', 'r') as f:
@@ -471,7 +468,7 @@ lst_picked_same = n_lst[3]
 lst_just_got_out_of_jail = n_lst[4]
 
 
-def load_game(players):
+def load_game():
     for player in players:
         for dictionary in players[player]['properties']:
             for pos in dictionary:
@@ -756,13 +753,73 @@ def handle_bankruptcy(player_num, players, rent, square_num):
     return True
 
 
-def save_game():
+def save_game(state):
     with open('previous_game.json', 'w') as f:
         json.dump(state, f, indent=4)
-    mainmenu()
+    re = mainmenu()
+    if re == 'load':
+        pass
+    if re == 'new':
+        state = {
+            "current_turn": 1,
+            "players": {
+                1: {
+                    "username": "player1",
+                    "position": 1,
+                    "money": 1000,
+                    "properties": [],
+                    "in_jail": [],
+                    "jail_turns": 0,
+                    "get_out_of_jail_cards": 0
+
+                },
+
+                2: {
+                    "username": "player1",
+                    "position": 1,
+                    "money": 1000,
+                    "properties": [],
+                    "in_jail": [],
+                    "jail_turns": 0,
+                    "get_out_of_jail_cards": 0 },
 
 
-if __name__ == "__main__":
+
+                    3: {
+                    "username": "player3",
+                    "position": 1,
+                    "money": 1000,
+                    "properties": [],
+                    "in_jail": [],
+                    "jail_turns": 0,
+                    "get_out_of_jail_cards": 0
+                },
+                4: {
+                    "username": "player4",
+                    "position": 1,
+                    "money": 1000,
+                    "properties": [],
+                    "in_jail": [],
+                    "jail_turns": 0,
+                    "get_out_of_jail_cards": 0
+                }
+            }
+            , "lst":
+                {"already_tried_getting_out": [],
+                "dices_after_prison": [],
+                "should_skip": [],
+                "lst_picked_same": [],
+                "lst_just_got_out_of_jail": []
+                }
+            }
+        with open('current-game.json', 'r') as f:
+            players_list = json.load(f)
+        for i in range(1, 5):
+            state['players'][i]['username'] = players_list[str(i)]
+
+
+#//////////////////////////////////////////////////////////////////
+if __name__ == '__main__':
     for i in players:
         map.append_player(f'p{i}', players[i]['position'])
 
@@ -778,8 +835,8 @@ if __name__ == "__main__":
             menu(player_num, square_num, players, 0, False, False)
             lst_picked_same.remove('/')
         elif op == 'save':
-            save_game()
-            break
+            save_game(state)
+
         elif op == 'exit':
             mainmenu()
             break
