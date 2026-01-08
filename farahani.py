@@ -163,6 +163,9 @@ def newgame():
 def loadgame():
     with open('previous_game.json', 'r') as f:
         state = json.load(f)
+    lst_players = []
+    for i in range(1, 5):
+        lst_players.append(state['players'][str(i)]['username'])
     return 'load'
 
 def leaderboard2():

@@ -1,9 +1,8 @@
 {
-    "current_turn": 1,
     "players": {
         "1": {
             "username": "player1",
-            "position": 1,
+            "position": 8,
             "money": 1000,
             "properties": [],
             "in_jail": [],
@@ -38,6 +37,7 @@
             "get_out_of_jail_cards": 0
         }
     },
+    "current_turn": 3,
     "lst": {
         "already_tried_getting_out": [],
         "dices_after_prison": [],

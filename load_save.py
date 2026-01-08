@@ -53,10 +53,6 @@ state = {
 
 
 def loading_game():
-    name_of_save = input('enter the game you want to load:')
-
-
-
     state2 = dict()
     state2['players'] = dict()
     state = {

@@ -760,6 +760,8 @@ def save_game(state):
     if re == 'load':
         pass
     if re == 'new':
+        state2 = dict()
+        state2['players'] = dict()
         state = {
             "current_turn": 1,
             "players": {
@@ -816,9 +818,17 @@ def save_game(state):
             players_list = json.load(f)
         for i in range(1, 5):
             state['players'][i]['username'] = players_list[str(i)]
+        player_dict = dict()
+        players = state["players"]
+        for i in players:
+            state2['players'][int(i)] = players[i]
+        current_turn = state["current_turn"]
+        state2["current_turn"] = current_turn
+        state2["lst"] = state["lst"]
+        state = state2
+        players = state["players"]
 
 
-#//////////////////////////////////////////////////////////////////
 if __name__ == '__main__':
     for i in players:
         map.append_player(f'p{i}', players[i]['position'])
@@ -890,7 +900,7 @@ if __name__ == '__main__':
                 square_num = 40
             elif Random == 'jail':
                 go_to_jail(player_num)
-        elif square_num in [3, 18, 34]:  #adding community chest
+        elif square_num in [3, 18, 34]:
             Random = random_community_chest(player_num, players)
             if Random == 'cnext100':
                 next_player = next_person_move(player_num)
