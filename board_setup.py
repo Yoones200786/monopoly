@@ -287,6 +287,8 @@ monopoly_data = {
         "hotel_cost": 200
     }
 }
+
+
 board = [None] * 40
 for key in monopoly_data:
     pos = int(key) - 1  
@@ -311,3 +313,4 @@ color_groups = {
 }
 railroad_positions = [6, 16, 26, 36]
 utility_positions = [13, 29]
+
