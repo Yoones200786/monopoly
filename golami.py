@@ -1,5 +1,5 @@
 from board_setup import board, color_groups, railroad_positions, utility_positions
-
+print(board)
 
 def has_monopoly(player_id, color):
     for pos in color_groups[color]:
@@ -17,8 +17,26 @@ def add_house_to_properties(player_id, position, players):
         for j in i:
             if j == f"square {position}":
                 i[j][1] += 1
+"property", ["railroad", "utility"]
+def add_mortgage_to_properties(player_id, position, players):
+    space = board[position - 1]
+    for i in players[player_id]["properties"]:
+        for j in i:
+            if j == f"square {position}":
+                if space['type'] == 'property':
+                    i[j][3] = True
+                elif space['type'] in ["railroad", "utility"]:
+                    i[j][1] = True
 
-
+def add_unmortgage_to_properties(player_id, position, players):
+    space = board[position - 1]
+    for i in players[player_id]["properties"]:
+        for j in i:
+            if j == f"square {position}":
+                if space['type'] == 'property':
+                    i[j][3] = False
+                elif space['type'] in ["railroad", "utility"]:
+                    i[j][1] = False
 def sell_house_from_properties(player_id,position,players):
     for i in players[player_id]["properties"]:
         for j in i:
@@ -73,9 +91,12 @@ def calculate_rent(position, current_player_id, dice_sum=0):
     if space.get("owner") == "" or space["owner"] == current_player_id or space.get("mortgaged", False):
         return 0
     if space["type"] == "property":
+        hotel = space.get('hotel', 0)
         houses = space.get("houses", 0)
         rent_list = space["rent"]
         base_rent = rent_list[0]
+        if hotel == 1:
+            return rent_list[5]
         if houses == 0 and has_monopoly(space["owner"], space["color"]):
             return base_rent * 2    # for monopoly rent will be double
         return rent_list[houses]    # Rent calculated with z houses
@@ -109,7 +130,7 @@ def buy_property(player_id, position, players):
             mortgaged = space.get("mortgaged", False)
             suitable_info = [color, houses, hotel, mortgaged]
         else:
-            suitable_info = [space['type']]
+            suitable_info = [space['type'], False]
         players[player_id]["properties"].append({f'square {position}': suitable_info})
         print('bought property successfully!')
         return True
@@ -135,21 +156,22 @@ def mortgage_property(player_id, position, players):
         players[player_id]["money"] += mortgage_value
         print('mortgaged successfully!')
         space["mortgaged"] = True
+        add_mortgage_to_properties(player_id, position, players)
         return True, mortgage_value  # "money recive and property mortgage"
+
     return False, 0  # "sharait gero gozari bargharar nist"
 
 
 def unmortgage_property(player_id, position, players):
-
-    space = board[position -1]
+    space = board[position-1]
     if space["type"] in ["property", "railroad", "utility"] and \
             space["owner"] == player_id and space.get("mortgaged", False):
         cost = int((space["buy_price"] // 2) * 1.1)
         if players[player_id]["money"] >= cost:
-            print('unmortgaged successfully!')
+            print(f'unmortgaged successfully! for cost of {cost}')
             players[player_id]["money"] -= cost
             space["mortgaged"] = False
-
+            add_unmortgage_to_properties(player_id, position, players)
 
 def build_house(player_id, position, players):
     space = board[position - 1]
@@ -288,17 +310,19 @@ def sell_house(player_id, position, players):
     print(f"house sold for {refund}$")
 
 
-def find_available_houses(player_id, players):
-    available_houses = []
-    pos_houses = []
-    for checker in range(40):
-        space = board[checker]
-        if space["type"] == "property":
-            if space["owner"] == player_id:
-                if space.get("houses", 0) > 0:
-                    available_houses.append(f'square {(checker+1)} with {space.get('houses', 0)} houses\n') # we can use this for more information
-                    pos_houses.append(checker+1)
-    return available_houses, pos_houses
+def find_available_houses(player_id, players,from_board=True):
+    if from_board:
+        available_houses = []
+        pos_houses = []
+        for checker in range(40):
+            space = board[checker]
+            if space["type"] == "property":
+                if space["owner"] == player_id:
+                    if space.get("houses", 0) > 0:
+                        available_houses.append(f'square {(checker+1)} with {space.get('houses', 0)} houses\n') # we can use this for more information
+                        pos_houses.append(checker+1)
+        return available_houses, pos_houses
+
 
 
 def find_available_hotel(player_id, players):  # if you have hotel you can sell it without worrying its for finding hotels to sell
@@ -326,14 +350,15 @@ def houses_available_for_sale(player_id, players):
     return houses_for_sale
 
 
-def changing_owner(removed_player_id, position):
-    space = board[position - 1]
-    player_id = space['owner']
+def changing_owner(players, removed_player_id, player_in_charge, position):
     for i in range(40):
         space = board[i]
         if space["owner"] == removed_player_id:
-            space["owner"] = player_id
-
+            space["owner"] = player_in_charge
+            if space['type'] == 'property':
+                players[player_in_charge]['properties'].append({f'square {i+1}': [space['color'], 0, 0, True]})
+            if space['type'] == 'utility' or space['type'] == 'railroad':
+                players[player_in_charge]['properties'].append({f'square {i+1}': [space['type'], True]})
 
 def can_mortgage(player_number, players):
     lst = []

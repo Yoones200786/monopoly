@@ -1,6 +1,5 @@
 # Send player to jail
 import random
-import mahdinewdebugforjail as mn
 # Manage jail options
 def handle_jail(players, player_id):
     player = players[player_id]
@@ -65,4 +64,4 @@ def handle_jail(players, player_id):
                 else:
                     return False
         elif choice == 4:
-            return "cancel"
+            return 'cancel'

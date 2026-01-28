@@ -1,8 +1,6 @@
 import random
 import json
-import golami as gm
 from map import move_player
-
 with open("current-game.json", "r") as f:
     username_dict = json.load(f)
 
@@ -55,9 +53,15 @@ def save_game():
         json.dump(dict_save, f, indent=4)
 
 
-chance_card = ["get out of jail free", "go directory to jail", "pay 15$ to the bank", "move to GO and get 200$"
-               , "get 150$ from the bank", "pay 20$ to the bank",
-               "give the next player 80$", "Give the next person $50", "pay 100$ to the bank", "skip next player", 'move to board walk']
+chance_card = ["get out of jail free",
+               "go directory to jail",
+               "pay 15$ to the bank",
+               "move to GO and get 200$",
+               "get 150$ from the bank",
+               "give the next player 80$",
+               "Give the next person $50",
+               "skip next player",
+               'move to board walk']
 
 community_chest = ["receive 200$ form bank",
                    "give the next player 100$",
@@ -66,10 +70,8 @@ community_chest = ["receive 200$ form bank",
                    "receive 50$ form bank",
                    "give the next player 150$",
                    "pick another card",
-                   "skip next player"]
-
-
-community_chest = ["skip next player"]
+                   "skip next player",
+                   "pay 100$ to the bank"]
 
 cards = {"p1": [], "p2": [], "p3": [], "p4": []}
 card_keys = list(cards.keys())
@@ -85,7 +87,7 @@ def random_chance_card(player, players):
         cards[player_key].append(random_card)
         players[player]['get_out_of_jail_cards'] += 1
     elif random_card == "pay 15$ to the bank":
-        players[player]['money'] -= 15
+        return 'b15'
     elif random_card == "go directory to jail":
         return 'jail'
     elif random_card == "move to GO and get 200$":
@@ -95,14 +97,10 @@ def random_chance_card(player, players):
         return 'skip'
     elif random_card == "get 150$ from the bank":
         players[player]['money'] += 150
-    elif random_card == "pay 20$ to the bank":
-        players[player]['money'] -= 20
     elif random_card == "give the next player 80$":
         return 'nextp80'
     elif random_card == "give the next person $50":
         return 'nextp50'
-    elif random_card == "pay 100$ to the bank":
-        players[player]['money'] -= 100
     elif random_card == 'move to board walk':
         return 'boardwalk'
 
@@ -114,17 +112,7 @@ def random_community_chest(player, players):
     if random_card == "receive 200$ form bank":
         players[player]['money'] += 200
     elif random_card == "sell one of your houses":
-        lst_houses = gm.houses_available_for_sale(player, players)
-        if not lst_houses:
-            print('since you dont have any house available for sell you will continue!')
-        else:
-            option = input(f'{lst_houses}choose one of your houses to sell')
-            while option not in lst_houses:
-                print('invalid input! try again')
-                option = input(f'{lst_houses}choose one of your houses to sell')
-            option = int(option)
-            gm.sell_house(player, option, players)
-    #elif random_card == "get 50$ from previous player":
+        return 'sell_house'
     elif random_card == "pick another card":
         print('pick another card!')
         return random_community_chest(player, players)
@@ -136,27 +124,7 @@ def random_community_chest(player, players):
         players[player]['money'] += 50
     elif random_card == "give the next player 150$":
         return 'cnextp150'
+    elif random_card == "pay 100$ to the bank":
+        return 'b100'
     elif random_card == "skip next player":
         return 'skip'
-
-def jail():
-    if player_num == 31:
-        print(f'player{player_num} went to jail')
-        player_num = 11
-
-
-def free_jail(i):
-    if "get out of jail free" in card_values[i - 1]:
-        player_num = 11
-
-
-def in_jail():
-    print("choose an option:")
-    print(f"1-payment of 50$")
-    print(f"2-use card")
-    print(f"3-try for a double")
-    jail_choices = int(input("selected option:"))
-    return jail_choices
-
-
-save_game()
