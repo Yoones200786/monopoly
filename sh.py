@@ -31,14 +31,7 @@ def leaderboard(players):
             f"{informarion['id']:<4} {informarion['username']:<10} {informarion['position']:<10} {jail_situation:<16} {informarion['jail_turns']:<12} {informarion['money']:<8} {all_properties}")
 
 
-p1 = informations(id=1, username=username_dict["1"], position=10, in_jail=False, jail_turns=2, money=2000,
-                  properties=["Park Place", "Boardwalk"])
-p2 = informations(2, username_dict["2"], position=5, in_jail=True, jail_turns=2, money=1200, properties=["Baltic Ave"])
-p3 = informations(3, username_dict["3"], position=15, in_jail=False, jail_turns=0, money=1800)
-p4 = informations(4, username_dict["4"], position=15, in_jail=False, jail_turns=0, money=1800)
-players = [p1, p2, p3, p4]
 
-leaderboard(players)
 
 
 def save_game():

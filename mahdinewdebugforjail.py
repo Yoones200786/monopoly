@@ -360,7 +360,7 @@ monopoly_data = {
         , "owner": ""
     }
 }
-# import colorama
+import colorama
 import random
 import map
 import json
@@ -483,9 +483,7 @@ if __name__ == '__main__':
             print('No save game found! Plz play new game')
 import golami as gm
 from sh import random_chance_card, random_community_chest
-
-# colorama.init()
-
+colorama.init()
 def load_game():
     with open('state.json', 'r') as f:
         state = json.load(f)
@@ -565,7 +563,7 @@ def menu(player_num, square_num, players, rent, code=True, debt=False, auto_next
     if debt or (players[player_num]['jail_turns'] == 2 and not already_tried_getting_out):
         orders.remove('next')
     if len(orders) == 0:
-        # print(f'Player {player_num} you are '+colorama.Fore.RED + colorama.Style.BRIGHT+'ELIMINATED!' + colorama.Style.RESET_ALL)
+        print(f'Player {player_num} you are '+colorama.Fore.RED + colorama.Style.BRIGHT+'ELIMINATED!' + colorama.Style.RESET_ALL)
         if square_num in [8, 23, 37, 3, 18, 34]:
             future_player = next_person_move(player_num)
             if not lst_pay_bank:
@@ -730,7 +728,7 @@ def menu(player_num, square_num, players, rent, code=True, debt=False, auto_next
 def go_to_jail(player_num):
     print(f'Player{player_num} went to JAIL')
     players_square[player_num] = 11
-    players[player_num]['in_jail'].append('/')
+    players[player_num]['in_jail'] = ['/']
     players[player_num]['position'] = 11
 
 
@@ -789,7 +787,7 @@ def remove_player(player_num):
     return
 def handle_bankruptcy(player_num, players, rent, square_num):
     while players[player_num]['money'] < rent:
-        # print(colorama.Fore.RED + colorama.Style.BRIGHT+'WARNING!'+colorama.Style.RESET_ALL+f'you have debt in amount of {-players[player_num]['money'] + rent}$')
+        print(colorama.Fore.RED + colorama.Style.BRIGHT+'WARNING!'+colorama.Style.RESET_ALL+f'you have debt in amount of {-players[player_num]['money'] + rent}$')
         menu(player_num, square_num, players, rent, True, True)
         if player_num not in players:
             return
@@ -810,7 +808,7 @@ if __name__ == '__main__':
         print(players)
         state['current_turn'] = player_num
         already_tried_getting_out.clear()
-        # print(colorama.Fore.GREEN + colorama.Style.BRIGHT + "---new turn starts!---" + colorama.Style.RESET_ALL)
+        print(colorama.Fore.GREEN + colorama.Style.BRIGHT + "---new turn starts!---" + colorama.Style.RESET_ALL)
         print(f"Your turn player {player_num}")
         op = input('do you want to save and exit or exit without saveing manage your properties before rolling dice?(yes/save/exit/or just enter to cancel)')
         square_num = players_square[player_num]
@@ -823,7 +821,7 @@ if __name__ == '__main__':
         elif op == 'exit':
             break
 
-        # print(colorama.Fore.CYAN + '                                SCOREBOARD' + colorama.Style.RESET_ALL)
+        print(colorama.Fore.CYAN + '                                SCOREBOARD' + colorama.Style.RESET_ALL)
         print('--------------------------------------------------------------------------------')
         for i in players:
             print(players[i])
