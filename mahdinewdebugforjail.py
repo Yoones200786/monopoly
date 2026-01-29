@@ -728,7 +728,7 @@ def menu(player_num, square_num, players, rent, code=True, debt=False, auto_next
 def go_to_jail(player_num):
     print(f'Player{player_num} went to JAIL')
     players_square[player_num] = 11
-    players[player_num]['in_jail'].append('/')
+    players[player_num]['in_jail'] = ['/']
     players[player_num]['position'] = 11
 
 
