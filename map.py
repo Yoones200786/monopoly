@@ -1,24 +1,34 @@
 dict_square = dict()
-Dict=dict()
+Dict = dict()
 
 for i in range(1, 41):
-    Dict[f'lst{i}']=['  ','  ','  ','  ']
-    Str=' '.join(['  ', '  ', '  ', '  '])
+    Dict[f'lst{i}'] = ['  ', '  ', '  ', '  ']
+    Str = ' '.join(['  ', '  ', '  ', '  '])
 
-def append_player(player,position):
-    index = {'p1': 0, 'p2': 1, 'p3': 2, 'p4': 3}[player]
-    Dict[f'lst{position}'][index]=player
+
+def append_player(player, position):
+    pos = {"p1": 0, "p2": 1, "p3": 2, "p4": 3}
+    index = pos[player]
+    Dict[f'lst{position}'][index] = player
     dict_square[player] = position
     print_map(Dict)
 
-    
 
-def move_player(player,position):
+def move_player(player, position):
+    pos = {"p1": 0, "p2": 1, "p3": 2, "p4": 3}
     old_pos = dict_square[player]
-    index = {'p1': 0, 'p2': 1, 'p3': 2, 'p4': 3}[player]
-    Dict[f'lst{old_pos}'][index]= '  '
-    append_player(player,position)
+    index = pos[player]
+    Dict[f'lst{old_pos}'][index] = '  '
+    append_player(player, position)
 
+
+def lose_player(player, position):
+    pos = {"p1": 0, "p2": 1, "p3": 2, "p4": 3}
+    index = pos[player]
+    pos.pop(player)
+    pos["  "] = index
+    Dict[f'lst{position}'][index] = '  '
+    print_map(Dict)
 def print_map(Dict):
     j = lambda x: ' '.join(Dict[x])
 
